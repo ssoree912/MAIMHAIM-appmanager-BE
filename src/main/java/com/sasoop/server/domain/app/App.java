@@ -1,7 +1,7 @@
 package com.sasoop.server.domain.app;
 
 import com.sasoop.server.common.BaseTimeEntity;
-import com.sasoop.server.domain.apptrigger.AppTrigger;
+import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.sasoop.server.domain.apptrigger;
+package com.sasoop.server.domain.appTrigger;
 
 import com.sasoop.server.common.BaseTimeEntity;
 import com.sasoop.server.domain.app.App;

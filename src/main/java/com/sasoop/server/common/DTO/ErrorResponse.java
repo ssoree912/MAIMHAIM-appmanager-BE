@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Schema(description = "공통 에러 응답 구조")
 public class ErrorResponse {
     @Schema(description = "에러 상태 코드", allowableValues = {"400", "401", "403","404","500"})
     private int status;                 // 에러 상태 코드
