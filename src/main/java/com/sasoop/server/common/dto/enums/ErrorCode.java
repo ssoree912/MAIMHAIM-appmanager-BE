@@ -1,4 +1,4 @@
-package com.sasoop.server.common.DTO.enums;
+package com.sasoop.server.common.dto.enums;
 
 import lombok.Getter;
 

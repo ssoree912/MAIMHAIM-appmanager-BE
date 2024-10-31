@@ -2,8 +2,8 @@ package com.sasoop.server.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sasoop.server.common.DTO.ErrorResponse;
-import com.sasoop.server.common.DTO.enums.ErrorCode;
+import com.sasoop.server.common.dto.ErrorResponse;
+import com.sasoop.server.common.dto.enums.ErrorCode;
 import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

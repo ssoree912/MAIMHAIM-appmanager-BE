@@ -1,6 +1,7 @@
 package com.sasoop.server.domain.app;
 
 import com.sasoop.server.common.BaseTimeEntity;
+import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.user.User;
 import jakarta.persistence.*;
@@ -20,9 +21,10 @@ public class App extends BaseTimeEntity {
     private Long appId;
 
     @Column(nullable = false)
-    private String appName;
-    private boolean activated;
-    private Category category;
+    private String name;
+    private boolean activate;
+    private boolean advancedActivate;
+//    private Category category;
 
     @ManyToOne
     @JoinColumn(name="user_id")
@@ -31,5 +33,13 @@ public class App extends BaseTimeEntity {
     @OneToMany(mappedBy = "app")
     private List<AppTrigger> appTriggers = new ArrayList<>();
 
+    public static App toEntity(AppRequest.AppSetting appSetting, User user){
+        return App.builder()
+                .user(user)
+                .name(appSetting.getName())
+                .activate(false)
+                .advancedActivate(false)
+                .build();
+    }
 
 }

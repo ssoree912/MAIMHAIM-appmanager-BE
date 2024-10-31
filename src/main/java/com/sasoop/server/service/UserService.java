@@ -1,9 +1,9 @@
 package com.sasoop.server.service;
 
-import com.sasoop.server.common.DTO.APIResponse;
-import com.sasoop.server.common.DTO.enums.SuccessCode;
-import com.sasoop.server.controller.DTO.request.UserRequest;
-import com.sasoop.server.controller.DTO.response.UserResponse;
+import com.sasoop.server.common.dto.APIResponse;
+import com.sasoop.server.common.dto.enums.SuccessCode;
+import com.sasoop.server.controller.dto.request.UserRequest;
+import com.sasoop.server.controller.dto.response.UserResponse;
 import com.sasoop.server.domain.user.User;
 import com.sasoop.server.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +17,15 @@ public class UserService {
 
     public APIResponse<UserResponse.UserInfo> createUser(UserRequest.CreateUser userRequest) {
 //        uuid 중복처리
-        if(userRepository.existsByUuid(userRequest.getUuid())) throw new IllegalArgumentException("중복된 uuid입니다");
+        if(userRepository.existsByUuid(userRequest.getUuid())) throw new IllegalArgumentException("User already exists");
         User user = User.toEntity(userRequest);
         User savedUser = userRepository.save(user);
         return APIResponse.of(SuccessCode.INSERT_SUCCESS, userResponse.toUserInfo(savedUser));
 
+    }
+
+    //유저조회
+    public User findByUser(Long userId){
+        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
     }
 }

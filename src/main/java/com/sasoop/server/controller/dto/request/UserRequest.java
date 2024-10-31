@@ -1,4 +1,4 @@
-package com.sasoop.server.controller.DTO.request;
+package com.sasoop.server.controller.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
-package com.sasoop.server.common.DTO;
+package com.sasoop.server.common.dto;
 
-import com.sasoop.server.common.DTO.enums.SuccessCode;
+import com.sasoop.server.common.dto.enums.SuccessCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

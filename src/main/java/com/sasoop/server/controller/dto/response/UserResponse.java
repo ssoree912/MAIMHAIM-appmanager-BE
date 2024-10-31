@@ -1,4 +1,4 @@
-package com.sasoop.server.controller.DTO.response;
+package com.sasoop.server.controller.dto.response;
 
 import com.sasoop.server.domain.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;

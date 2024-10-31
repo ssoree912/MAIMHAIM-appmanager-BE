@@ -1,7 +1,7 @@
 package com.sasoop.server.domain.user;
 
 import com.sasoop.server.common.BaseTimeEntity;
-import com.sasoop.server.controller.DTO.request.UserRequest;
+import com.sasoop.server.controller.dto.request.UserRequest;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.handler.StringListConverter;
 import jakarta.persistence.*;
@@ -29,7 +29,7 @@ public class User extends BaseTimeEntity {
     private String email;
     private String preferences;
 //    앱매니저 자체 활성화 여부
-    private boolean activated;
+    private boolean activate;
 //    json
     @Column
     @Convert(converter = StringListConverter.class)
@@ -44,7 +44,7 @@ public class User extends BaseTimeEntity {
                 .uuid(userRequest.getUuid())
                 .email("")
                 .preferences("")
-                .activated(false)
+                .activate(false)
                 .build();
     }
 }
