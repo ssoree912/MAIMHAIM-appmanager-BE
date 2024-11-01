@@ -28,7 +28,7 @@ public class AppService {
     public APIResponse<List<AppResponse.AppInfo>> createApp(AppRequest.CreateApp appRequest, User user) {
         List<App> apps = new ArrayList<>();
 //        앱 정보 리스트 객체화 후 리스트에 담아 한번에 저장
-        for(AppRequest.AppSetting appSetting : appRequest.getAppSettings()) {
+        for(AppRequest.AppSetting appSetting : appRequest.getApps()) {
             App app = App.toEntity(appSetting,user);
             apps.add(app);
         }
