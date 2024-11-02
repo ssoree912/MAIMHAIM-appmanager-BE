@@ -3,14 +3,12 @@ package com.sasoop.server.service;
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
-import com.sasoop.server.controller.dto.request.MemberRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.app.AppRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.managedApp.ManagedAppRepository;
 import com.sasoop.server.domain.member.Member;
-import com.sasoop.server.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +28,10 @@ public class AppService {
      * @param request 추가하고 싶은 앱(체크)
      * @return 앱 리스트
      */
-    public APIResponse<List<AppResponse.AppInfo>> addApps(List<AppRequest.Adding> request) {
+    public APIResponse<List<AppResponse.AppInfo>> addApps(Member member,List<AppRequest.Adding> request) {
         List<App> appsList = new ArrayList<>();
         for (AppRequest.Adding activateApp : request) {
-            App app = appRepository.findById(activateApp.getAppId()).orElseThrow(() -> new IllegalArgumentException("App not found"));
+            App app = validateMemberAndApp(member,activateApp.getAppId());
             app.updateAdd(activateApp.isAdd());
             app.updateActivate(activateApp.isAdd());
             appRepository.save(app);
@@ -44,11 +42,14 @@ public class AppService {
     }
 
     public APIResponse<AppResponse.AppInfo> updateActivate(Long appId, boolean activate, Member member) {
-        App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
-        if(app.getMember() != member) throw new IllegalArgumentException("Member is not the same");
+        App app = validateMemberAndApp(member,appId);
+
+        if(!app.isAdd()) throw new IllegalArgumentException("App is not add");
+
         app.updateActivate(activate);
         App updatedApp = appRepository.save(app);
         AppResponse.AppInfo appInfo = new AppResponse.AppInfo(updatedApp);
+
         return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
     }
     public APIResponse<List<AppResponse.AppInfo>> findByFilter(boolean isAdd, String keyword, Member member) {
@@ -91,6 +92,12 @@ public class AppService {
     }
     private ManagedApp findByPackageName(String packageName) {
         return managedAppRepository.findByPackageName(packageName).orElseThrow(() -> new IllegalArgumentException("ManagedApp not found"));
+    }
+
+    private App validateMemberAndApp(Member member, Long appId) {
+        App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
+        if(app.getMember() != member) throw new IllegalArgumentException("Member is not match");
+        return app;
     }
 
 

@@ -38,9 +38,10 @@ public class AppController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PatchMapping()
-    public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> createApp(@Valid @RequestBody AppRequest.AddApp appRequest) {
-        APIResponse response = appService.addApps(appRequest.getApps());
+    @PatchMapping("{memberId}")
+    public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> createApp(@PathVariable("memberId") Long memberId ,@Valid @RequestBody AppRequest.AddApp appRequest) {
+        Member getMember = memberService.findByMember(memberId); //유저 조회
+        APIResponse response = appService.addApps(getMember,appRequest.getApps());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
