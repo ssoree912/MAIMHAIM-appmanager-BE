@@ -1,6 +1,7 @@
 package com.sasoop.server.domain.appTrigger;
 
 import com.sasoop.server.common.BaseTimeEntity;
+import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.handler.StringListConverter;
@@ -36,5 +37,9 @@ public class AppTrigger extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name="trigger_type_id")
     private TriggerType triggerType;
+
+    @ManyToOne
+    @JoinColumn(name = "detail_function_id")
+    private DetailFunction detailFunction;
 
 }

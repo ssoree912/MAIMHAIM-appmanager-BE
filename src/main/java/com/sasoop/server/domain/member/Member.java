@@ -1,7 +1,7 @@
-package com.sasoop.server.domain.user;
+package com.sasoop.server.domain.member;
 
 import com.sasoop.server.common.BaseTimeEntity;
-import com.sasoop.server.controller.dto.request.UserRequest;
+import com.sasoop.server.controller.dto.request.MemberRequest;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.handler.StringListConverter;
 import jakarta.persistence.*;
@@ -18,10 +18,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseTimeEntity {
+public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long memberId;
 
     @Column
     private String location;
@@ -35,13 +35,13 @@ public class User extends BaseTimeEntity {
     @Convert(converter = StringListConverter.class)
     private List<String> setting;
 
-    @OneToMany(mappedBy = "user",orphanRemoval = true,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<App> apps = new ArrayList<>();
 
-    public static User toEntity(UserRequest.CreateUser userRequest) {
-        return User.builder()
+    public static Member toEntity(MemberRequest.CreateMember memberRequest) {
+        return Member.builder()
                 .location("")
-                .uuid(userRequest.getUuid())
+                .uuid(memberRequest.getUuid())
                 .email("")
                 .preferences("")
                 .activate(false)

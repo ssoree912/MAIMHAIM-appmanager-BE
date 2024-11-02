@@ -21,12 +21,14 @@ public class AppResponse {
         private boolean activate;
         @Schema(description = "앱 고급모드 활성화")
         private boolean advancedActivate;
+        private String image;
 
         public AppInfo(App app) {
             this.appId = app.getAppId();
             this.name = app.getName();
             this.activate = app.isActivate();
             this.advancedActivate = app.isAdvancedActivate();
+            this.image = app.getManagedApp().getImageUrl();
         }
     }
 
