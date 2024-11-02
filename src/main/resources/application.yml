@@ -7,25 +7,21 @@ spring:
   jackson:
     time-zone: Asia/Seoul
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${LOCAL_MYSQL_HOST}:${LOCAL_MYSQL_PORT}/${MYSQL_DB}?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-    username: ${LOCAL_MYSQL_USERNAME}
-    password: ${LOCAL_MYSQL_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${LOCAL_POSTGRESQL_HOST}:${LOCAL_POSTGRESQL_PORT}/${DB_NAME}
+    username: ${LOCAL_POSTGRESQL_USERNAME}
+    password: ${LOCAL_POSTGRESQL_PASSWORD}
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   jpa:
-    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      format-sql: true
-      highlight-sql: true
-      ddl-auto: update
+      ddl-auto: create
 
-      dialect: org.hibernate.dialect.MySQLDialect # ??? ??
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect # ?? ?? ??
-    generate-ddl: true
 
   sql:
     init:

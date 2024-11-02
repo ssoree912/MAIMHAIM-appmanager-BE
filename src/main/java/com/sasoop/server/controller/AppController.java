@@ -2,12 +2,11 @@ package com.sasoop.server.controller;
 
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
-import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
-import com.sasoop.server.domain.user.User;
+import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.service.AppService;
-import com.sasoop.server.service.UserService;
+import com.sasoop.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppController {
     private final AppService appService;
-    private final UserService userService;
+    private final MemberService memberService;
 
     /**
      * 앱 추가 API
@@ -47,8 +46,8 @@ public class AppController {
     })
     @PostMapping
     public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> createAPP(@Valid @RequestBody AppRequest.CreateApp appRequest){
-        User getUser = userService.findByUser(appRequest.getUserId()); //유저 조회
-        APIResponse response = appService.createApp(appRequest,getUser); //저장한 앱 리스트
+        Member getMember = memberService.findByMember(appRequest.getMemberId()); //유저 조회
+        APIResponse response = appService.createApp(appRequest, getMember); //저장한 앱 리스트
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

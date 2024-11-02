@@ -12,6 +12,8 @@ public class AppRequest {
     @Setter
     public static class AppSetting{
         private String name;
+        private String packageName;
+        private String uid;
     }
 
     @Getter
@@ -19,7 +21,7 @@ public class AppRequest {
     public static class CreateApp {
         @NotNull
         @Schema(description = "유저 기본키", example = "1")
-        private Long userId;
+        private Long memberId;
         @Schema(description = "앱 설정 정보 리스트")
         private List<AppSetting> apps;
 

@@ -2,9 +2,9 @@ package com.sasoop.server.controller;
 
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
-import com.sasoop.server.controller.dto.request.UserRequest;
-import com.sasoop.server.controller.dto.response.UserResponse;
-import com.sasoop.server.service.UserService;
+import com.sasoop.server.controller.dto.request.MemberRequest;
+import com.sasoop.server.controller.dto.response.MemberResponse;
+import com.sasoop.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@Tag(name = "user")
+@Tag(name = "member")
 @RequiredArgsConstructor
-public class UserController {
-    private final UserService userService;
+public class MemberController {
+    private final MemberService memberService;
 
     @Operation(summary = "유저 추가")
     @ApiResponses(value = {
@@ -35,8 +35,8 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @PostMapping
-    public ResponseEntity<APIResponse<UserResponse.UserInfo>> createUser( @RequestBody @Valid UserRequest.CreateUser userRequest) {
-        APIResponse response = userService.createUser(userRequest);
+    public ResponseEntity<APIResponse<MemberResponse.MemberInfo>> createMember(@RequestBody @Valid MemberRequest.CreateMember createMember) {
+        APIResponse response = memberService.createMember(createMember);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
 }

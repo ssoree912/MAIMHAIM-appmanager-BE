@@ -1,6 +1,6 @@
 package com.sasoop.server.controller.dto.response;
 
-import com.sasoop.server.domain.user.User;
+import com.sasoop.server.domain.member.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,14 +8,14 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserResponse {
+public class MemberResponse {
     @Getter
     @Setter
     @Builder
     @Schema(description = "유저 정보")
-    public static class UserInfo{
+    public static class MemberInfo {
         @Schema(description = "유저 기본키")
-        private Long userId;
+        private Long memberId;
 
 
         @Schema(description = "유저 식별자")
@@ -23,10 +23,10 @@ public class UserResponse {
     }
 
 //    객체 생성
-    public static UserInfo toUserInfo(User user) {
-        return UserInfo.builder()
-                .userId(user.getUserId())
-                .uuid(user.getUuid())
+    public static MemberInfo toMemberInfo(Member member) {
+        return MemberInfo.builder()
+                .memberId(member.getMemberId())
+                .uuid(member.getUuid())
                 .build();
     }
 }
