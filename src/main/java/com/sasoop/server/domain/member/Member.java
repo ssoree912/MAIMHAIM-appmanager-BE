@@ -38,10 +38,10 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<App> apps = new ArrayList<>();
 
-    public static Member toEntity(MemberRequest.CreateMember memeberRequest) {
+    public static Member toEntity(MemberRequest.CreateMember memberRequest) {
         return Member.builder()
                 .location("")
-                .uuid(memeberRequest.getUuid())
+                .uuid(memberRequest.getUuid())
                 .email("")
                 .preferences("")
                 .activate(false)
