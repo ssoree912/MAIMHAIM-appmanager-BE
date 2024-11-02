@@ -31,16 +31,16 @@ public class AppController {
     private final MemberService memberService;
 
 
-    @Operation(summary = "앱 추가")
+    @Operation(summary = "앱 추가 / 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "성공"),
             @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PostMapping()
+    @PatchMapping()
     public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> createApp(@Valid @RequestBody AppRequest.AddApp appRequest) {
-        APIResponse response = appService.addApps(appRequest.getAppIds());
+        APIResponse response = appService.addApps(appRequest.getApps());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -57,6 +57,20 @@ public class AppController {
             (@PathVariable("memberId") Long memberId,@RequestParam(name = "idAdd",defaultValue = "false",required = false) boolean add, @RequestParam( value = "search",required = false) String keyword){
         Member getMember = memberService.findByMember(memberId); //유저 조회
         APIResponse response = appService.findByFilter(add,keyword,getMember);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "앱 활성화")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
+    @PatchMapping("{memberId}/{appId}/status")
+    public ResponseEntity<APIResponse<AppResponse.AppInfo>> activate(@PathVariable("memberId") Long memberId, @PathVariable("appId") Long appId, @RequestBody AppRequest.Activate activate) {
+        Member getMember = memberService.findByMember(memberId); //유저 조회
+        APIResponse response = appService.updateActivate(appId, activate.isActivate(), getMember);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

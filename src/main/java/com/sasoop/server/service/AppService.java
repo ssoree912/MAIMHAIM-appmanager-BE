@@ -27,29 +27,30 @@ public class AppService {
 
     /**
      * 내가 가진 앱 추가
-     * @param appIds 추가하고 싶은 앱(체크)
+     * @param request 추가하고 싶은 앱(체크)
      * @return 앱 리스트
      */
-    public APIResponse<List<AppResponse.AppInfo>> addApps(List<Long> appIds) {
-        List<App> apps = new ArrayList<>();
-        for (Long appId : appIds) {
-            App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
-            app.updateAdd(true);
-            app.updateActivate(true);
+    public APIResponse<List<AppResponse.AppInfo>> addApps(List<AppRequest.Adding> request) {
+        List<App> appsList = new ArrayList<>();
+        for (AppRequest.Adding activateApp : request) {
+            App app = appRepository.findById(activateApp.getAppId()).orElseThrow(() -> new IllegalArgumentException("App not found"));
+            app.updateAdd(activateApp.isAdd());
+            app.updateActivate(activateApp.isAdd());
             appRepository.save(app);
-            apps.add(app);
+            appsList.add(app);
         }
-        List<AppResponse.AppInfo> appInfos = apps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
+        List<AppResponse.AppInfo> appInfos = appsList.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
         return APIResponse.of(SuccessCode.INSERT_SUCCESS, appInfos);
     }
 
-
-    public APIResponse<List<AppResponse.AppInfo>> getApps(Member member) {
-        List<App> apps = appRepository.findByMember(member).orElse(Collections.emptyList());
-        List<AppResponse.AppInfo> appInfos = apps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
-        return APIResponse.of(SuccessCode.SELECT_SUCCESS, appInfos);
+    public APIResponse<AppResponse.AppInfo> updateActivate(Long appId, boolean activate, Member member) {
+        App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
+        if(app.getMember() != member) throw new IllegalArgumentException("Member is not the same");
+        app.updateActivate(activate);
+        App updatedApp = appRepository.save(app);
+        AppResponse.AppInfo appInfo = new AppResponse.AppInfo(updatedApp);
+        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
     }
-
     public APIResponse<List<AppResponse.AppInfo>> findByFilter(boolean isAdd, String keyword, Member member) {
         List<App> apps = appRepository.findByFilter(isAdd, keyword, member).orElse(Collections.emptyList());
         List<AppResponse.AppInfo> appInfos = apps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
