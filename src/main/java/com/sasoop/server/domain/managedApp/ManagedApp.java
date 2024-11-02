@@ -22,7 +22,7 @@ public class ManagedApp extends BaseTimeEntity {
     private String name;
     private String packageName;
     private String mainUrl;
-    private String image;
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
