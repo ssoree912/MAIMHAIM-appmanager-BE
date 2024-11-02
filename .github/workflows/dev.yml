@@ -33,26 +33,23 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
-      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
-#      - name: docker image build
-#        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:haetsal-deploy
-#      # DockerHub Login (push 하기 위해)
-#      - name: docker login
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-#
-#      # Docker hub 로 push
-#      - name: Docker Hub push
-#        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:haetsal-deploy
+      - name: docker image build
+        run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:appmanager-deploy
+      # DockerHub Login (push 하기 위해)
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # Docker hub 로 push
+      - name: Docker Hub push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:appmanager-deploy
 #  deploy:
 #    needs: build
 #    runs-on: ubuntu-latest
