@@ -17,12 +17,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      LOCAL_POSTGRESQL_HOST: ${{ secrets.POSTGRESQL_HOST }}
-      LOCAL_POSTGRESQL_PORT: ${{ secrets.POSTGRESQL_PORT }}
-      DB_NAME: ${{ secrets.DB_NAME }}
-      LOCAL_POSTGRESQL_USERNAME: ${{ secrets.POSTGRESQL_USERNAME }}
-      LOCAL_POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
     permissions:
       contents: read
 
@@ -35,7 +29,10 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
+      - name: Set YML
+        run: |
+            echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
+            find src
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
 
