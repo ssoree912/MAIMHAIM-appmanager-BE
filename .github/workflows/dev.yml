@@ -38,6 +38,7 @@ jobs:
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build -x test
+
       - name: docker image build
         run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPO }}:appmanager-deploy
       # DockerHub Login (push 하기 위해)
