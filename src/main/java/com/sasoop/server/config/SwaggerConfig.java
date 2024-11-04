@@ -17,6 +17,14 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi privateApi2() {
+        return GroupedOpenApi.builder()
+                .group("v2")
+                .pathsToMatch("/api/v2/**")
+                .build();
+    }
+
+    @Bean
     public OpenAPI springShopOpenAPI() {
         String title = "사숲 서버 api";
         String description = "사숲 서버 api";
