@@ -24,8 +24,25 @@ public class MemberService {
 
     }
 
+//        앱 매니저 활성화
+    public APIResponse<MemberResponse.Home> activateAppManager(MemberRequest.HomeActivate activateRequest) {
+        Member member = findByMember(activateRequest.getMemberId());
+        member.updateActivate(activateRequest.isActive());
+        memberRepository.save(member);
+
+        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, new MemberResponse.Home(member));
+
+
+    }
+
+    public APIResponse<MemberResponse.Home> getHome(Long memberId){
+        Member member = findByMember(memberId);
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, new MemberResponse.Home(member));
+    }
+
     //유저조회
     public Member findByMember(Long memberId){
         return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
     }
+
 }

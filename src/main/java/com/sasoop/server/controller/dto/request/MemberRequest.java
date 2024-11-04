@@ -20,4 +20,18 @@ public class MemberRequest {
         @Schema(description = "유저 아이디")
         private Long memberId;
     }
+
+    @Getter
+    @Setter
+    public static class HomeActivate{
+        @NotBlank(message = "유저 아이디를 입력해주세요")
+        @Schema(description = "유저 아이디")
+        private Long memberId;
+
+        @Schema(description = "앱 활성화")
+        private boolean active;
+    }
+
+
+
 }

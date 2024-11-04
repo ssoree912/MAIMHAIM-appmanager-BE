@@ -21,6 +21,21 @@ public class MemberResponse {
         @Schema(description = "유저 식별자")
         private String uuid;
     }
+    @Getter
+    @Setter
+    @Schema(description = "앱매니저 정보")
+    public static class Home{
+        @Schema(description = "앱매니저 활성화")
+        private boolean activate;
+
+        @Schema(description = "트리커 개수")
+        private int triggerCounts;
+
+        public Home(Member member) {
+            this.activate = member.isActivate();
+            this.triggerCounts = member.getCount();
+        }
+    }
 
 //    객체 생성
     public static MemberInfo toMemberInfo(Member member) {
@@ -29,4 +44,5 @@ public class MemberResponse {
                 .uuid(member.getUuid())
                 .build();
     }
+
 }

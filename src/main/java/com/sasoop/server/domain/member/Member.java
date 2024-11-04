@@ -28,6 +28,7 @@ public class Member extends BaseTimeEntity {
     private String uuid;
     private String email;
     private String preferences;
+    private int count;
 //    앱매니저 자체 활성화 여부
     private boolean activate;
 //    json
@@ -37,6 +38,10 @@ public class Member extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "member",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<App> apps = new ArrayList<>();
+
+    public void updateActivate(boolean activate) {
+        this.activate = activate;
+    }
 
     public static Member toEntity(MemberRequest.CreateMember memberRequest) {
         return Member.builder()
