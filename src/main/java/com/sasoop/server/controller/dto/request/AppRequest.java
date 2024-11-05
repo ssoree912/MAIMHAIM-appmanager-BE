@@ -45,7 +45,6 @@ public class AppRequest {
     @Getter
     @Setter
     public static class Activate{
-        private Long appId;
         @Schema(description = "활성화 여부")
         private boolean activate;
     }

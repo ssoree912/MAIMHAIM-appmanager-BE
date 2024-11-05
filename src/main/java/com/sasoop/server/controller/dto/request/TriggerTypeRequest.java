@@ -14,6 +14,6 @@ public class TriggerTypeRequest {
     @Setter
     public static class CreateTriggerType{
         private SettingType settingType;
-        String options;
+        private String options;
     }
 }

@@ -100,5 +100,9 @@ public class AppService {
         return app;
     }
 
+    public App findById(Long appId) {
+        return appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
+    }
+
 
 }

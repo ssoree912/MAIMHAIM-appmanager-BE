@@ -13,7 +13,7 @@ public class InnerSettingResponse {
     }
     @Getter
     @Setter
-    public static class TriggerTypes{
-
+    public static class FunctionResponse{
+        
     }
 }
