@@ -12,6 +12,7 @@ import com.sasoop.server.domain.category.CategoryRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.managedApp.ManagedAppRepository;
 import com.sasoop.server.domain.member.Member;
+import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ public class AppService {
     private final ManagedAppRepository managedAppRepository;
     private final CategoryRepository categoryRepository;
     private final TriggerService triggerService;
+    private final MemberRepository memberRepository;
 
     /**
      * 내가 가진 앱 추가
@@ -136,21 +138,23 @@ public class AppService {
 
     public InnerSettingResponse.PackageName getPackageName(Member member, String location){
         String packageName = "";
-        InnerSettingResponse.PackageName respones = new InnerSettingResponse.PackageName(packageName);
+        InnerSettingResponse.PackageName response = new InnerSettingResponse.PackageName(packageName);
         ManagedApp managedApp = managedAppRepository.findByApBSSIDContaining(location).orElse(null);
         if(managedApp != null){
             log.info(managedApp.getName());
             App app = appRepository.findByMemberAndManagedApp(member, managedApp).orElse(null);
             if(app != null){
                 if(validateActivate(app)) packageName = app.getPackageName();
-                respones.setPackageName(packageName);
+                member.addCount();
+                memberRepository.save(member);
+                response.setPackageName(packageName);
             }
         }
-        return respones;
+        return response;
     }
     private boolean validateActivate(App app){
 //        앱 활성화 반펼
-        if(app.isActivate()) return true;
+        if(app.isActivate() && app.isAdd()) return true;
         return false;
     }
 

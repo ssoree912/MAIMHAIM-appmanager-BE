@@ -14,7 +14,8 @@ import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.appTrigger.AppTriggerRepository;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.detailFunction.DetailFunctionRepository;
-import com.sasoop.server.domain.triggerType.SettingOption;
+import com.sasoop.server.domain.member.Member;
+import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.domain.triggerType.TriggerTypeRepository;
@@ -27,7 +28,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +38,7 @@ public class TriggerService {
     private final DetailFunctionRepository detailFunctionRepository;
     private final TriggerTypeRepository triggerTypeRepository;
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
 
     public APIResponse<TriggerResponse.AppTriggers> getTriggers(App app){
         AppResponse.AppInfo appInfo = new AppResponse.AppInfo(app);
@@ -70,8 +71,9 @@ public class TriggerService {
     }
 
     public APIResponse<TriggerResponse.Trigger> updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
-        try {   
+        try {
             AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
+            if(getTrigger.getTriggerType().getSettingType().equals(SettingType.MOTION)) updateMotionApp(app);
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             getTrigger.updateTriggerValue(triggerValue);
             AppTrigger appTrigger = appTriggerRepository.save(getTrigger);
@@ -116,7 +118,21 @@ public class TriggerService {
         return false;
     }
 
-
+    private void updateMotionApp(App newApp){
+        Member member = newApp.getMember();
+        App presentApp = newApp.getMember().getShakerApp();
+//        흔들기 업데이트
+        member.updateShakerApp(newApp);
+        memberRepository.save(member);
+//        기존 앱중 모션 흔들기 false로 만들기 (시연용)
+        List<AppTrigger> presentAppTriggers = presentApp.getAppTriggers();
+        for(AppTrigger appTrigger : presentAppTriggers){
+            if(appTrigger.getTriggerType().getSettingType().equals(SettingType.MOTION)){
+                appTrigger.updateActivate(false);
+                appTriggerRepository.save(appTrigger);
+            }
+        }
+    }
 
 
 
