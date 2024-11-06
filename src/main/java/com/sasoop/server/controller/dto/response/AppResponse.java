@@ -1,13 +1,30 @@
 package com.sasoop.server.controller.dto.response;
 
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.category.Category;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 @Component
 public class AppResponse {
+    @Getter
+    @Setter
+    public static class AppInfoWithCategory{
+        private Long categoryId;
+        private String categoryName;
+        private List<AppInfo> apps;
+
+        public AppInfoWithCategory(Category category, List<AppInfo> apps) {
+            this.categoryId = category.getCategoryId();
+            this.categoryName = category.getName();
+            this.apps = apps;
+        }
+    }
+
 
     @Getter
     @Setter

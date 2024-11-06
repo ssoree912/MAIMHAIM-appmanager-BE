@@ -7,6 +7,8 @@ import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.controller.dto.response.InnerSettingResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.app.AppRepository;
+import com.sasoop.server.domain.category.Category;
+import com.sasoop.server.domain.category.CategoryRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.managedApp.ManagedAppRepository;
 import com.sasoop.server.domain.member.Member;
@@ -26,6 +28,7 @@ public class AppService {
     private static final Logger log = LoggerFactory.getLogger(AppService.class);
     private final AppRepository appRepository;
     private final ManagedAppRepository managedAppRepository;
+    private final CategoryRepository categoryRepository;
 
     /**
      * 내가 가진 앱 추가
@@ -56,12 +59,30 @@ public class AppService {
 
         return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
     }
-    public APIResponse<List<AppResponse.AppInfo>> findByFilter(boolean isAdd, String keyword, Member member) {
-        List<App> apps = appRepository.findByFilter(isAdd, keyword, member).orElse(Collections.emptyList());
+    public APIResponse<List<AppResponse.AppInfo>> findByFilter( String keyword, Member member) {
+        List<App> apps = appRepository.findByMemberAndKeywordk( keyword, member).orElse(Collections.emptyList());
         List<AppResponse.AppInfo> appInfos = apps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
         return APIResponse.of(SuccessCode.SELECT_SUCCESS, appInfos);
     }
 
+    public APIResponse<List<AppResponse.AppInfoWithCategory>> findByFilterAndCategory(boolean add, String keyword, Member member) {
+        List<App> apps = appRepository.findByFilter(add, keyword, member).orElse(Collections.emptyList());
+        List<Category> categories = categoryRepository.findAllByOrderByNameAsc().orElse(Collections.emptyList());
+        List<AppResponse.AppInfoWithCategory> appInfoWithCategories = categories.stream()
+                .map(category -> {
+                    List<AppResponse.AppInfo> filteredApps = apps.stream()
+                            .filter(app -> app.getManagedApp() != null
+                                    && app.getManagedApp().getCategory() != null
+                                    && app.getManagedApp().getCategory().getCategoryId().equals(category.getCategoryId()))
+                            .map(AppResponse.AppInfo::new)
+                            .collect(Collectors.toList());
+                    return new AppResponse.AppInfoWithCategory(category, filteredApps);
+                })
+                .filter(appInfoWithCategory -> !appInfoWithCategory.getApps().isEmpty()) // Optional: to exclude categories with no apps
+                .collect(Collectors.toList());
+
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, appInfoWithCategories);
+    }
 
     /**
      * 내 앱 리스트 저장

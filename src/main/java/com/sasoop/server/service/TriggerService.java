@@ -90,7 +90,7 @@ public class TriggerService {
     public AppTrigger createTrigger(App app, TriggerRequest.CreateTrigger triggerRequest)  {
         try {
             TriggerType getTriggerType = triggerTypeRepository.findById(triggerRequest.getTriggerTypeId()).orElseThrow(() -> new IllegalArgumentException("Invalid trigger type"));
-            DetailFunction getFunction = detailFunctionRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Invalid function"));
+            DetailFunction getFunction = detailFunctionRepository.findById(app.getManagedApp().getCategory().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("Invalid function"));
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             AppTrigger appTrigger = AppTrigger.toEntity(triggerRequest, triggerValue, app, getTriggerType, getFunction);
             return appTriggerRepository.save(appTrigger);
