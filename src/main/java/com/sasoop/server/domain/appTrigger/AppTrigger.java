@@ -1,9 +1,12 @@
 package com.sasoop.server.domain.appTrigger;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sasoop.server.common.BaseTimeEntity;
+import com.sasoop.server.controller.dto.request.TriggerRequest;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.triggerType.TriggerType;
+import com.sasoop.server.handler.JsonConverter;
 import com.sasoop.server.handler.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,11 +27,12 @@ public class AppTrigger extends BaseTimeEntity {
     private Long triggerId;
     @Column(nullable = false)
     private String name;
-    private boolean activated;
+    private boolean activate;
+    private String urlScheme;
 
-    @Column
-    @Convert(converter = StringListConverter.class)
-    private List<String> triggerValue;
+    @Column(columnDefinition = "text")
+    @Convert(converter = JsonConverter.class)
+    private JsonNode triggerValue;
 
     @ManyToOne
     @JoinColumn(name = "app_id")
@@ -39,7 +43,28 @@ public class AppTrigger extends BaseTimeEntity {
     private TriggerType triggerType;
 
     @ManyToOne
-    @JoinColumn(name = "detail_function_id")
-    private DetailFunction detailFunction;
+    @JoinColumn(name = "function_id")
+    private DetailFunction function;
+
+    public void updateActivate(boolean activate) {
+        this.activate = activate;
+    }
+
+    public void updateTriggerValue(JsonNode triggerValue) {
+        this.triggerValue = triggerValue;
+    }
+
+    public static AppTrigger toEntity(TriggerRequest.CreateTrigger triggerRequest, JsonNode triggerValue, App app, TriggerType triggerType, DetailFunction detailFunction) {
+        return AppTrigger.builder()
+                .name(triggerType.getTriggerTypeName())
+                .activate(triggerRequest.isActivate())
+                .triggerValue(triggerValue)
+                .function(detailFunction)
+                .app(app)
+                .triggerType(triggerType)
+                .build();
+
+    }
+
 
 }

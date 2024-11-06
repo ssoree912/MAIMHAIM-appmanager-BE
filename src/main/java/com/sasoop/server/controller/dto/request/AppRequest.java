@@ -20,6 +20,8 @@ public class AppRequest {
         @NotNull
         @Schema(description = "앱 uid")
         private String uid;
+
+        private String appName;
     }
 
     @Getter
@@ -45,7 +47,6 @@ public class AppRequest {
     @Getter
     @Setter
     public static class Activate{
-        private Long appId;
         @Schema(description = "활성화 여부")
         private boolean activate;
     }

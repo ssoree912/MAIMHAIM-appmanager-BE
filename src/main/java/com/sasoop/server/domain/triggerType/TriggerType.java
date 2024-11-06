@@ -1,11 +1,13 @@
 package com.sasoop.server.domain.triggerType;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sasoop.server.common.BaseTimeEntity;
-import com.sasoop.server.handler.StringListConverter;
+import com.sasoop.server.handler.JsonConverter;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -21,8 +23,12 @@ public class TriggerType extends BaseTimeEntity {
     private String triggerTypeName;
 
     @Column
-    @Convert(converter = StringListConverter.class)
-    private List<String> settingOptions;
+    @Enumerated(EnumType.STRING)
+    private SettingType settingType;
+
+    @Column(columnDefinition = "text")
+    @Convert(converter = JsonConverter.class)
+    private JsonNode settingOptions;
 
 
 
