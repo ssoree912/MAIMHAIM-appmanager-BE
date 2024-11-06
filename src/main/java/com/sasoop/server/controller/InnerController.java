@@ -49,7 +49,7 @@ public class InnerController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "내가 다운 받은 앱 리스트 추가(내부)")
+    @Operation(summary = "트리거 추가")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),

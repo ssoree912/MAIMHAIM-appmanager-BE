@@ -15,6 +15,7 @@ import com.sasoop.server.domain.appTrigger.AppTriggerRepository;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.detailFunction.DetailFunctionRepository;
 import com.sasoop.server.domain.triggerType.SettingOption;
+import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.domain.triggerType.TriggerTypeRepository;
 import jakarta.transaction.Transactional;
@@ -69,7 +70,7 @@ public class TriggerService {
     }
 
     public APIResponse<TriggerResponse.Trigger> updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
-        try {
+        try {   
             AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             getTrigger.updateTriggerValue(triggerValue);
@@ -98,6 +99,15 @@ public class TriggerService {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Error parsing options JSON", e);
         }
+    }
+
+    @Transactional
+    public AppTrigger createTrigger(SettingType settingType ,App app)  {
+        TriggerType getTriggerType = triggerTypeRepository.findBySettingType(settingType).orElseThrow(() -> new IllegalArgumentException("Invalid trigger type"));
+        DetailFunction getFunction = detailFunctionRepository.findById(app.getManagedApp().getCategory().getCategoryId()).orElseThrow(() -> new IllegalArgumentException("Invalid function"));
+        JsonNode triggerValue = getTriggerType.getSettingOptions();
+        AppTrigger appTrigger = AppTrigger.toEntity( triggerValue, app, getTriggerType, getFunction);
+        return appTriggerRepository.save(appTrigger);
     }
 
     private boolean validateActivate(App app){

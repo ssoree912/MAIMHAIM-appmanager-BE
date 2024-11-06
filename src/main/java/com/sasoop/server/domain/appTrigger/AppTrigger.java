@@ -5,6 +5,7 @@ import com.sasoop.server.common.BaseTimeEntity;
 import com.sasoop.server.controller.dto.request.TriggerRequest;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.handler.JsonConverter;
 import com.sasoop.server.handler.StringListConverter;
@@ -58,6 +59,17 @@ public class AppTrigger extends BaseTimeEntity {
         return AppTrigger.builder()
                 .name(triggerType.getTriggerTypeName())
                 .activate(triggerRequest.isActivate())
+                .triggerValue(triggerValue)
+                .function(detailFunction)
+                .app(app)
+                .triggerType(triggerType)
+                .build();
+
+    }
+    public static AppTrigger toEntity( JsonNode triggerValue, App app, TriggerType triggerType, DetailFunction detailFunction) {
+        return AppTrigger.builder()
+                .name(triggerType.getTriggerTypeName())
+                .activate(triggerType.getSettingType().equals(SettingType.LOCATION) ? true : false)
                 .triggerValue(triggerValue)
                 .function(detailFunction)
                 .app(app)

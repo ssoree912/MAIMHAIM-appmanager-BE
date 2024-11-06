@@ -12,7 +12,9 @@ import com.sasoop.server.domain.category.CategoryRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.managedApp.ManagedAppRepository;
 import com.sasoop.server.domain.member.Member;
+import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,11 +26,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AppService {
-    private static final Logger log = LoggerFactory.getLogger(AppService.class);
     private final AppRepository appRepository;
     private final ManagedAppRepository managedAppRepository;
     private final CategoryRepository categoryRepository;
+    private final TriggerService triggerService;
 
     /**
      * 내가 가진 앱 추가
@@ -91,15 +94,17 @@ public class AppService {
      * @return 저장된 앱 정보 리스트
      */
     public APIResponse<List<AppResponse.AppInfo>> createApp(AppRequest.CreateAppSetting appRequest, Member member) {
-        List<App> apps = new ArrayList<>();
+        List<App> savedApps = new ArrayList<>();
 //        앱 정보 리스트 객체화 후 리스트에 담아 한번에 저장
         for(AppRequest.AppSetting appSetting : appRequest.getApps()) {
             if(!validateApp(appSetting,member)) continue;
             ManagedApp managedApp = findByPackageName(appSetting.getPackageName());
             App app = App.toEntity(appSetting, member,false, managedApp);
-            apps.add(app);
+            App savedApp = appRepository.save(app);
+            triggerService.createTrigger(SettingType.LOCATION, app);
+            triggerService.createTrigger(SettingType.MOTION, app);
+            savedApps.add(savedApp);
         }
-        List<App> savedApps = appRepository.saveAll(apps);
         List<AppResponse.AppInfo> appInfos = savedApps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
         return APIResponse.of(SuccessCode.INSERT_SUCCESS, appInfos);
     }
