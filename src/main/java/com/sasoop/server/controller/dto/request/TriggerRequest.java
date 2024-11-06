@@ -11,9 +11,10 @@ public class TriggerRequest {
     public static class CreateTrigger{
         private Long appId;
         private Long triggerTypeId;
-        private Long functionId;
-        @Schema(description = "{\"run\": false, \"popUp\": false}")
+//        private Long functionId;
+        @Schema(example = "{\"run\": false, \"popUp\": false}")
         private String triggerValue;
+
         private boolean activate;
         private String name;
         private String url;
@@ -23,5 +24,11 @@ public class TriggerRequest {
     @Setter
     public static class UpdateTrigger{
         private String triggerValue;
+    }
+
+    @Getter
+    @Setter
+    public static class ValidateTrigger{
+        private String locations;
     }
 }

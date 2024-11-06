@@ -42,7 +42,7 @@ public class ManagedAppController {
     })
     @PostMapping
     public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> createAPP(@Valid @RequestBody AppRequest.CreateAppSetting appRequest){
-        Member getMember = memberService.findByMember(appRequest.getMemberId()); //유저 조회
+        Member getMember = memberService.findByMemberId(appRequest.getMemberId()); //유저 조회
         APIResponse response = appService.createApp(appRequest, getMember); //저장한 앱 리스트
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

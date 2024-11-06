@@ -13,7 +13,11 @@ public class InnerSettingResponse {
     }
     @Getter
     @Setter
-    public static class FunctionResponse{
-        
+    public static class PackageName{
+        String packageName;
+
+        public PackageName(String packageName) {
+            this.packageName = packageName;
+        }
     }
 }

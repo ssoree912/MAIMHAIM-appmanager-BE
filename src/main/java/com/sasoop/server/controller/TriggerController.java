@@ -6,6 +6,7 @@ import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.request.TriggerRequest;
 import com.sasoop.server.controller.dto.response.TriggerResponse;
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.service.AppService;
 import com.sasoop.server.service.TriggerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,19 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/apps")
 @Tag(name = "Triggers")
 @RequiredArgsConstructor
 public class TriggerController {
     private final TriggerService triggerService;
     private final AppService appService;
 
-
-    @PostMapping("/v2/triggers")
-    public void createTrigger(@RequestBody TriggerRequest.CreateTrigger triggerRequest){
-        App getApp = appService.findById(triggerRequest.getAppId());
-        triggerService.getCreateTrigger(getApp, triggerRequest);
-    }
 
     @Operation(summary = "앱에 따른 트리거 값 조회")
     @ApiResponses(value = {
@@ -41,7 +36,7 @@ public class TriggerController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @GetMapping("/v1/apps/{appId}/triggers")
+    @GetMapping("/{appId}/triggers")
     public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> getTriggers(@PathVariable("appId") Long appId){
         App getApp = appService.findById(appId);
         APIResponse response = triggerService.getTriggers(getApp);
@@ -55,7 +50,7 @@ public class TriggerController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PatchMapping("/v1/apps/{appId}/triggers/{triggerId}/status")
+    @PatchMapping("/{appId}/triggers/{triggerId}/status")
     public ResponseEntity<APIResponse<TriggerResponse.Trigger>> activateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
                                                                                 @RequestBody AppRequest.Activate activate){
         App getApp = appService.findById(appId);
@@ -71,12 +66,13 @@ public class TriggerController {
             @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
-    @PatchMapping("/v1/apps/{appId}/triggers/{triggerId}")
+    @PatchMapping("/{appId}/triggers/{triggerId}")
     public ResponseEntity<APIResponse<TriggerResponse.Trigger>> updateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
                                                                                 @RequestBody TriggerRequest.UpdateTrigger triggerRequest){
         App getApp = appService.findById(appId);
         APIResponse response = triggerService.updateTrigger(getApp, triggerId, triggerRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
 }

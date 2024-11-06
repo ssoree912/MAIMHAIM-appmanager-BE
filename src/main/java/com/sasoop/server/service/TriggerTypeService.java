@@ -66,23 +66,23 @@ public class TriggerTypeService {
         }
     }
 
-    public String findBySettingType(SettingType settingType) {
+    public SettingOption findBySettingType(SettingType settingType) {
         TriggerType triggerType = triggerTypeRepository.findBySettingType(settingType).orElseThrow(() -> new IllegalArgumentException("없음"));
         Object setting = getSettingOptions(triggerType);
         if (setting instanceof SettingOption.LocationSettings) {
             SettingOption.LocationSettings locationSettings = (SettingOption.LocationSettings) setting;
-            return String.valueOf(locationSettings.isRun());
-            // Now you can access locationSettings.run and locationSettings.popUp
+            return SettingOption.of(locationSettings);
         } else if (setting instanceof SettingOption.MotionSettings) {
             SettingOption.MotionSettings motionSettings = (SettingOption.MotionSettings) setting;
-            return String.valueOf(motionSettings.isShaker());
+            return SettingOption.of(motionSettings);
             // Now you can access motionSettings.shaker and motionSettings.touch
         } else if (setting instanceof SettingOption.TimeSettings) {
             SettingOption.TimeSettings timeSettings = (SettingOption.TimeSettings) setting;
+            return SettingOption.of(timeSettings);
             // Now you can access timeSettings.time
-            return "";
+        }else {
+            throw new IllegalArgumentException("Invalid SettingType");
         }
-        return "";
     }
 
 }

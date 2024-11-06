@@ -42,6 +42,10 @@ public class AppTrigger extends BaseTimeEntity {
     @JoinColumn(name="trigger_type_id")
     private TriggerType triggerType;
 
+    @ManyToOne
+    @JoinColumn(name = "function_id")
+    private DetailFunction function;
+
     public void updateActivate(boolean activate) {
         this.activate = activate;
     }
@@ -55,6 +59,7 @@ public class AppTrigger extends BaseTimeEntity {
                 .name(triggerType.getTriggerTypeName())
                 .activate(triggerRequest.isActivate())
                 .triggerValue(triggerValue)
+                .function(detailFunction)
                 .app(app)
                 .triggerType(triggerType)
                 .build();

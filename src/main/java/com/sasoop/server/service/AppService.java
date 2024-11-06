@@ -4,12 +4,15 @@ import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
+import com.sasoop.server.controller.dto.response.InnerSettingResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.app.AppRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.managedApp.ManagedAppRepository;
 import com.sasoop.server.domain.member.Member;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AppService {
+    private static final Logger log = LoggerFactory.getLogger(AppService.class);
     private final AppRepository appRepository;
     private final ManagedAppRepository managedAppRepository;
 
@@ -102,6 +106,26 @@ public class AppService {
 
     public App findById(Long appId) {
         return appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
+    }
+
+    public InnerSettingResponse.PackageName getPackageName(Member member, String location){
+        String packageName = "";
+        InnerSettingResponse.PackageName respones = new InnerSettingResponse.PackageName(packageName);
+        ManagedApp managedApp = managedAppRepository.findByApBSSIDContaining(location).orElse(null);
+        if(managedApp != null){
+            log.info(managedApp.getName());
+            App app = appRepository.findByMemberAndManagedApp(member, managedApp).orElse(null);
+            if(app != null){
+                if(validateActivate(app)) packageName = app.getPackageName();
+                respones.setPackageName(packageName);
+            }
+        }
+        return respones;
+    }
+    private boolean validateActivate(App app){
+//        앱 활성화 반펼
+        if(app.isActivate()) return true;
+        return false;
     }
 
 

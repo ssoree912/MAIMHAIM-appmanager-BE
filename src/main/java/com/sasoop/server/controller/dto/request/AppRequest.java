@@ -20,6 +20,8 @@ public class AppRequest {
         @NotNull
         @Schema(description = "앱 uid")
         private String uid;
+
+        private String appName;
     }
 
     @Getter

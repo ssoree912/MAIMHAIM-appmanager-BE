@@ -26,7 +26,7 @@ public class MemberService {
 
 //        앱 매니저 활성화
     public APIResponse<MemberResponse.Home> activateAppManager(MemberRequest.HomeActivate activateRequest) {
-        Member member = findByMember(activateRequest.getMemberId());
+        Member member = findByMemberId(activateRequest.getMemberId());
         member.updateActivate(activateRequest.isActive());
         memberRepository.save(member);
 
@@ -36,12 +36,12 @@ public class MemberService {
     }
 
     public APIResponse<MemberResponse.Home> getHome(Long memberId){
-        Member member = findByMember(memberId);
+        Member member = findByMemberId(memberId);
         return APIResponse.of(SuccessCode.SELECT_SUCCESS, new MemberResponse.Home(member));
     }
 
     //유저조회
-    public Member findByMember(Long memberId){
+    public Member findByMemberId(Long memberId){
         return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
     }
 

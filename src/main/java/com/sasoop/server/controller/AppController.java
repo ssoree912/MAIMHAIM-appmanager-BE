@@ -3,14 +3,10 @@ package com.sasoop.server.controller;
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
 import com.sasoop.server.controller.dto.request.AppRequest;
-import com.sasoop.server.controller.dto.request.MemberRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
-import com.sasoop.server.controller.dto.response.TriggerResponse;
-import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.service.AppService;
 import com.sasoop.server.service.MemberService;
-import com.sasoop.server.service.TriggerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +28,6 @@ import java.util.List;
 public class AppController {
     private final AppService appService;
     private final MemberService memberService;
-    private final TriggerService triggerService;
 
 
     @Operation(summary = "앱 추가 / 삭제")
@@ -44,7 +39,7 @@ public class AppController {
     })
     @PatchMapping("{memberId}")
     public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> createApp(@PathVariable("memberId") Long memberId ,@Valid @RequestBody AppRequest.AddApp appRequest) {
-        Member getMember = memberService.findByMember(memberId); //유저 조회
+        Member getMember = memberService.findByMemberId(memberId); //유저 조회
         APIResponse response = appService.addApps(getMember,appRequest.getApps());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -60,7 +55,7 @@ public class AppController {
     @GetMapping("{memberId}")
     public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> getApps
             (@PathVariable("memberId") Long memberId,@RequestParam(name = "idAdd",defaultValue = "false",required = false) boolean add, @RequestParam( value = "search",required = false) String keyword){
-        Member getMember = memberService.findByMember(memberId); //유저 조회
+        Member getMember = memberService.findByMemberId(memberId); //유저 조회
         APIResponse response = appService.findByFilter(add,keyword,getMember);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -74,7 +69,7 @@ public class AppController {
     })
     @PatchMapping("{memberId}/{appId}/status")
     public ResponseEntity<APIResponse<AppResponse.AppInfo>> activate(@PathVariable("memberId") Long memberId, @PathVariable("appId") Long appId, @RequestBody AppRequest.Activate activate) {
-        Member getMember = memberService.findByMember(memberId); //유저 조회
+        Member getMember = memberService.findByMemberId(memberId); //유저 조회
         APIResponse response = appService.updateActivate(appId, activate.isActivate(), getMember);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

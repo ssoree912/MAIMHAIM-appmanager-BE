@@ -17,18 +17,21 @@ import com.sasoop.server.domain.detailFunction.DetailFunctionRepository;
 import com.sasoop.server.domain.triggerType.SettingOption;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.domain.triggerType.TriggerTypeRepository;
-import com.sasoop.server.domain.triggerType.types.LocationSettings;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class TriggerService {
+    private static final Logger log = LoggerFactory.getLogger(TriggerService.class);
     private final AppTriggerRepository appTriggerRepository;
     private final TriggerTypeService triggerTypeService;
     private final DetailFunctionRepository detailFunctionRepository;
@@ -47,7 +50,13 @@ public class TriggerService {
         return response;
     }
 
-    public APIResponse<TriggerResponse.Trigger> getCreateTrigger(App app, TriggerRequest.CreateTrigger triggerRequest){
+    public void validateTriggers(App app, TriggerRequest.ValidateTrigger triggerRequest){
+        String packageName = "";
+        if(validateActivate(app) && appTriggerRepository.existsByAppAndTriggerValueContaining(app,triggerRequest.getLocations())) packageName = app.getPackageName();
+
+    }
+
+    public APIResponse<TriggerResponse.Trigger> getCreatedTrigger(App app, TriggerRequest.CreateTrigger triggerRequest){
         AppTrigger appTrigger = createTrigger(app,triggerRequest);
         return APIResponse.of(SuccessCode.INSERT_SUCCESS, appTrigger);
     }
@@ -81,7 +90,7 @@ public class TriggerService {
     public AppTrigger createTrigger(App app, TriggerRequest.CreateTrigger triggerRequest)  {
         try {
             TriggerType getTriggerType = triggerTypeRepository.findById(triggerRequest.getTriggerTypeId()).orElseThrow(() -> new IllegalArgumentException("Invalid trigger type"));
-            DetailFunction getFunction = detailFunctionRepository.findById(triggerRequest.getFunctionId()).orElseThrow(() -> new IllegalArgumentException("Invalid function"));
+            DetailFunction getFunction = detailFunctionRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Invalid function"));
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             AppTrigger appTrigger = AppTrigger.toEntity(triggerRequest, triggerValue, app, getTriggerType, getFunction);
             return appTriggerRepository.save(appTrigger);
@@ -90,6 +99,14 @@ public class TriggerService {
             throw new IllegalArgumentException("Error parsing options JSON", e);
         }
     }
+
+    private boolean validateActivate(App app){
+//        앱 활성화 반펼
+        if(app.isActivate()) return true;
+        return false;
+    }
+
+
 
 
 

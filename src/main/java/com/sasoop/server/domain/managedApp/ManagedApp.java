@@ -23,6 +23,8 @@ public class ManagedApp extends BaseTimeEntity {
     private String packageName;
     private String mainUrl;
     private String imageUrl;
+    @Column(name = "ap_bssid")
+    private String apBSSID;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
