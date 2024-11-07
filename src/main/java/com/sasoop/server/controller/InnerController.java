@@ -42,9 +42,9 @@ public class InnerController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @GetMapping("/{memberId}/")
-    public ResponseEntity<APIResponse> validateTrigger(@PathVariable("memberId") Long memberId, @RequestParam SettingType settingType, @RequestParam String value){
+    public ResponseEntity<APIResponse> validateTrigger(@PathVariable("memberId") Long memberId, @RequestParam SettingType settingType, @RequestParam(required = false) String value){
         Member getMember = memberService.findByMemberId(memberId);
-        InnerSettingResponse.PackageName packageName = appService.getPackageName(getMember, value);
+        InnerSettingResponse.PackageName packageName = (settingType.equals(SettingType.LOCATION)) ? appService.getLocationPackageName(getMember, value):appService.getMotionPackageName(getMember);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, packageName);
         return ResponseEntity.ok(response);
     }

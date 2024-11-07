@@ -63,11 +63,16 @@ public class TriggerService {
         return APIResponse.of(SuccessCode.INSERT_SUCCESS, appTrigger);
     }
 
+
     public APIResponse<TriggerResponse.Trigger> activateTrigger(App app, Long triggerId, AppRequest.Activate activate){
         AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
+//        모션 트리거의 경우 shakerapp변경,기존 모션 트리거 끄기
+        if(getTrigger.getTriggerType().getSettingType().equals(SettingType.MOTION)) updateMotionApp(app);
         getTrigger.updateActivate(activate.isActivate());
         AppTrigger appTrigger = appTriggerRepository.save(getTrigger);
-        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appTrigger);
+        TriggerResponse.Trigger<?> triggerResponse = TriggerResponse.of(appTrigger, appTrigger.getTriggerValue()); // triggerValue가 필요하다면 전달
+
+        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, triggerResponse);
     }
 
     public APIResponse<TriggerResponse.Trigger> updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
@@ -76,6 +81,7 @@ public class TriggerService {
             if(getTrigger.getTriggerType().getSettingType().equals(SettingType.MOTION)) updateMotionApp(app);
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             getTrigger.updateTriggerValue(triggerValue);
+            getTrigger.updateActivate(true);
             AppTrigger appTrigger = appTriggerRepository.save(getTrigger);
             return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appTrigger);
         } catch (JsonProcessingException e) {
@@ -125,11 +131,14 @@ public class TriggerService {
         member.updateShakerApp(newApp);
         memberRepository.save(member);
 //        기존 앱중 모션 흔들기 false로 만들기 (시연용)
-        List<AppTrigger> presentAppTriggers = presentApp.getAppTriggers();
-        for(AppTrigger appTrigger : presentAppTriggers){
-            if(appTrigger.getTriggerType().getSettingType().equals(SettingType.MOTION)){
-                appTrigger.updateActivate(false);
-                appTriggerRepository.save(appTrigger);
+        if(presentApp != null){
+            List<AppTrigger> presentAppTriggers = presentApp.getAppTriggers();
+            for(AppTrigger appTrigger : presentAppTriggers){
+                if(appTrigger.getTriggerType().getSettingType().equals(SettingType.MOTION)){
+//                해당 앱 모션 트리거 끄기
+                    appTrigger.updateActivate(false);
+                    appTriggerRepository.save(appTrigger);
+                }
             }
         }
     }

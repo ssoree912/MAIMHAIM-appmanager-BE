@@ -16,8 +16,6 @@ import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -136,7 +134,7 @@ public class AppService {
         return appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
     }
 
-    public InnerSettingResponse.PackageName getPackageName(Member member, String location){
+    public InnerSettingResponse.PackageName getLocationPackageName(Member member, String location){
         String packageName = "";
         InnerSettingResponse.PackageName response = new InnerSettingResponse.PackageName(packageName);
         ManagedApp managedApp = managedAppRepository.findByApBSSIDContaining(location).orElse(null);
@@ -149,6 +147,19 @@ public class AppService {
                 memberRepository.save(member);
                 response.setPackageName(packageName);
             }
+        }
+        return response;
+    }
+
+    public InnerSettingResponse.PackageName getMotionPackageName(Member member){
+        String packageName = "";
+        InnerSettingResponse.PackageName response = new InnerSettingResponse.PackageName(packageName);
+        App shakerApp = member.getShakerApp();
+        if(shakerApp != null){
+            if(validateActivate(shakerApp)) packageName = shakerApp.getPackageName();
+            member.addCount();
+            memberRepository.save(member);
+            response.setPackageName(packageName);
         }
         return response;
     }
