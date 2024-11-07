@@ -53,6 +53,10 @@ public class App extends BaseTimeEntity {
                 .build();
     }
 
+    public void updateAdvancedActivate(boolean advancedActivate) {
+        this.advancedActivate = advancedActivate;
+    }
+
     public void updateActivate(boolean activate) {
         this.activate = activate;
     }

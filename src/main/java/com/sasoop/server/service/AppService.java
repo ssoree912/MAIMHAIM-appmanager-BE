@@ -62,6 +62,18 @@ public class AppService {
 
         return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
     }
+
+    public APIResponse<AppResponse.AppInfo> updateAdvancedActivate(Long appId, boolean activate, Member member) {
+        App app = validateMemberAndApp(member,appId);
+
+        if(!app.isAdd() && !app.isActivate()) throw new IllegalArgumentException("App did not activate and add yet");
+
+        app.updateAdvancedActivate(activate);
+        App updatedApp = appRepository.save(app);
+        AppResponse.AppInfo appInfo = new AppResponse.AppInfo(updatedApp);
+
+        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
+    }
     public APIResponse<List<AppResponse.AppInfo>> findByFilter( String keyword, Member member) {
         List<App> apps = appRepository.findByMemberAndKeywordk( keyword, member).orElse(Collections.emptyList());
         List<AppResponse.AppInfo> appInfos = apps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환

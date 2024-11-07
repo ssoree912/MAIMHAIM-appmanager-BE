@@ -91,5 +91,18 @@ public class AppController {
     }
 
 
+    @Operation(summary = "고급 모드 활성화")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
+    @PatchMapping("{memberId}/{appId}/advanced-status")
+    public ResponseEntity<APIResponse<AppResponse.AppInfo>> advancedActivate(@PathVariable("memberId") Long memberId, @PathVariable("appId") Long appId, @RequestBody AppRequest.Activate activate) {
+        Member getMember = memberService.findByMemberId(memberId); //유저 조회
+        APIResponse response = appService.updateAdvancedActivate(appId, activate.isActivate(), getMember);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }
