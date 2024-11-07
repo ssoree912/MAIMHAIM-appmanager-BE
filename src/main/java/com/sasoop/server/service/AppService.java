@@ -168,7 +168,7 @@ public class AppService {
         InnerSettingResponse.PackageName response = new InnerSettingResponse.PackageName(packageName);
         App shakerApp = member.getShakerApp();
         if(shakerApp != null){
-            if(validateActivate(shakerApp)) packageName = shakerApp.getPackageName();
+            if(validateActivate(shakerApp) && shakerApp.isAdvancedActivate()) packageName = shakerApp.getPackageName();
             member.addCount();
             memberRepository.save(member);
             response.setPackageName(packageName);
