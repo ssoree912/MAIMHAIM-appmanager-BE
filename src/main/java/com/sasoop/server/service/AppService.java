@@ -51,6 +51,12 @@ public class AppService {
         return APIResponse.of(SuccessCode.INSERT_SUCCESS, appInfos);
     }
 
+    public APIResponse<AppResponse.AppInfo> findById(Long appId, Member member){
+        App app = validateMemberAndApp(member,appId);
+        AppResponse.AppInfo appInfo = new AppResponse.AppInfo(app);
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, appInfo);
+    }
+
     public APIResponse<AppResponse.AppInfo> updateActivate(Long appId, boolean activate, Member member) {
         App app = validateMemberAndApp(member,appId);
 
