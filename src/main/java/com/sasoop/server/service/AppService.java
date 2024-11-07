@@ -118,9 +118,14 @@ public class AppService {
             if(!validateApp(appSetting,member)) continue;
             ManagedApp managedApp = findByPackageName(appSetting.getPackageName());
             App app = App.toEntity(appSetting, member,false, managedApp);
+            if(app.getPackageName().equals("com.lgt.tmoney")) {
+                app.updateAdvancedActivate(true);
+                member.updateShakerApp(app);
+            }
             App savedApp = appRepository.save(app);
             triggerService.createTrigger(SettingType.LOCATION, app);
             triggerService.createTrigger(SettingType.MOTION, app);
+//            시연용
             savedApps.add(savedApp);
         }
         List<AppResponse.AppInfo> appInfos = savedApps.stream().map(AppResponse.AppInfo::new).collect(Collectors.toList()); //저장된 앱 리스트 dto 리스트 전환
