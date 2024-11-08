@@ -36,6 +36,7 @@ public class AppResponse {
         private String name;
         @Schema(description = "앱 기본모드 활성화")
         private boolean activate;
+        private boolean add;
         @Schema(description = "앱 고급모드 활성화")
         private boolean advancedActivate;
         private String image;
@@ -46,6 +47,7 @@ public class AppResponse {
             this.appId = app.getAppId();
             this.name = app.getName();
             this.activate = app.isActivate();
+            this.add = app.isAdd();
             this.advancedActivate = app.isAdvancedActivate();
             this.image = app.getManagedApp().getImageUrl();
             this.packageName = app.getManagedApp().getPackageName();

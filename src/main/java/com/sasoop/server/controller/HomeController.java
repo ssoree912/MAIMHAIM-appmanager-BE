@@ -3,7 +3,10 @@ package com.sasoop.server.controller;
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
 import com.sasoop.server.controller.dto.request.MemberRequest;
+import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.controller.dto.response.MemberResponse;
+import com.sasoop.server.domain.member.Member;
+import com.sasoop.server.service.AppService;
 import com.sasoop.server.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,12 +19,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 @Tag(name = "Home")
 @RequiredArgsConstructor
 public class HomeController {
     private final MemberService memberService;
+    private final AppService appService;
 
     @Operation(summary = "앱매니저 메인 화면 ")
     @ApiResponses(value = {
@@ -32,7 +38,9 @@ public class HomeController {
     })
     @GetMapping("{memberId}")
     public ResponseEntity<APIResponse<MemberResponse.Home>> getHome(@PathVariable("memberId") Long memberId){
-        APIResponse response = memberService.getHome(memberId);
+        Member getMember = memberService.findByMemberId(memberId); //유저 조회
+        List<AppResponse.AppInfo> appInfos =  appService.findByFilter(null,getMember);
+        APIResponse response = memberService.getHome(getMember,appInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

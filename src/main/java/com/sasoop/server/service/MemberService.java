@@ -3,11 +3,14 @@ package com.sasoop.server.service;
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.MemberRequest;
+import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.controller.dto.response.MemberResponse;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +38,8 @@ public class MemberService {
 
     }
 
-    public APIResponse<MemberResponse.Home> getHome(Long memberId){
-        Member member = findByMemberId(memberId);
-        return APIResponse.of(SuccessCode.SELECT_SUCCESS, new MemberResponse.Home(member));
+    public APIResponse<MemberResponse.Home> getHome(Member member, List<AppResponse.AppInfo> appInfos){
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, new MemberResponse.Home(member,appInfos));
     }
 
     //유저조회

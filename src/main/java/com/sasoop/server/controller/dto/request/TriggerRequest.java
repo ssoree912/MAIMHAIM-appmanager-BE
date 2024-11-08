@@ -12,7 +12,7 @@ public class TriggerRequest {
         private Long appId;
         private Long triggerTypeId;
 //        private Long functionId;
-        @Schema(example = "{\"run\": false, \"popUp\": false}")
+//        @Schema(example = "{\"run\": false, \"popUp\": false}")
         private String triggerValue;
 
         private boolean activate;
