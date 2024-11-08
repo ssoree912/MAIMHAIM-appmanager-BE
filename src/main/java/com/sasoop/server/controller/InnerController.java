@@ -44,7 +44,7 @@ public class InnerController {
     @GetMapping("/{memberId}/")
     public ResponseEntity<APIResponse> validateTrigger(@PathVariable("memberId") Long memberId, @RequestParam SettingType settingType, @RequestParam(required = false) String value){
         Member getMember = memberService.findByMemberId(memberId);
-        InnerSettingResponse.PackageName packageName = (settingType.equals(SettingType.LOCATION)) ? appService.getLocationPackageName(getMember, value):appService.getMotionPackageName(getMember);
+        InnerSettingResponse.PackageName packageName = appService.getLocationPackageName(getMember, value);
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, packageName);
         return ResponseEntity.ok(response);
     }

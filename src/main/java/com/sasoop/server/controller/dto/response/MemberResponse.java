@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class MemberResponse {
     @Getter
@@ -31,6 +33,13 @@ public class MemberResponse {
         @Schema(description = "트리커 개수")
         private int triggerCounts;
 
+        private List<AppResponse.AppInfo> appInfoList;
+
+        public Home(Member member,List<AppResponse.AppInfo> appInfoList) {
+            this.activate = member.isActivate();
+            this.triggerCounts = member.getCount();
+            this.appInfoList = appInfoList;
+        }
         public Home(Member member) {
             this.activate = member.isActivate();
             this.triggerCounts = member.getCount();

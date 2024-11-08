@@ -2,6 +2,7 @@ package com.sasoop.server.controller;
 
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
+import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.domain.member.Member;
@@ -56,7 +57,8 @@ public class AppController {
     public ResponseEntity<APIResponse<List<AppResponse.AppInfo>>> getApps
             (@PathVariable("memberId") Long memberId, @RequestParam( value = "search",required = false) String keyword){
         Member getMember = memberService.findByMemberId(memberId); //유저 조회
-        APIResponse response = appService.findByFilter(keyword,getMember);
+        List<AppResponse.AppInfo> appInfos = appService.findByFilter(keyword,getMember);
+        APIResponse<List<AppResponse.AppInfo>> response = APIResponse.of(SuccessCode.SELECT_SUCCESS, appInfos);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

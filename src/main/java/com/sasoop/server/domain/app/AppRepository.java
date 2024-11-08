@@ -23,7 +23,8 @@ public interface AppRepository extends JpaRepository<App, Long> {
 
     @Query("SELECT a FROM App a " +
             "WHERE ( a.member = :member) " +
-            "AND (:keyword IS NULL OR a.name LIKE %:keyword%)")
+            "AND (:keyword IS NULL OR a.name LIKE %:keyword%)"
+            + "ORDER BY a.name")
     Optional<List<App>> findByMemberAndKeywordk(@Param("keyword") String keyword,@Param("member") Member member);
 
     @Query("SELECT a.packageName FROM App a WHERE a.member = :member AND a.managedApp = :managedApp")

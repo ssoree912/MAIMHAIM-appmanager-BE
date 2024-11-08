@@ -57,8 +57,6 @@ public class TriggerTypeService {
         switch (triggerType.getSettingType()) {
             case LOCATION:
                 return getSettingOptionsAsObject(triggerType, SettingOption.LocationSettings.class);
-            case MOTION:
-                return getSettingOptionsAsObject(triggerType, SettingOption.MotionSettings.class);
             case TIME:
                 return getSettingOptionsAsObject(triggerType, SettingOption.TimeSettings.class);
             default:
@@ -72,11 +70,7 @@ public class TriggerTypeService {
         if (setting instanceof SettingOption.LocationSettings) {
             SettingOption.LocationSettings locationSettings = (SettingOption.LocationSettings) setting;
             return SettingOption.of(locationSettings);
-        } else if (setting instanceof SettingOption.MotionSettings) {
-            SettingOption.MotionSettings motionSettings = (SettingOption.MotionSettings) setting;
-            return SettingOption.of(motionSettings);
-            // Now you can access motionSettings.shaker and motionSettings.touch
-        } else if (setting instanceof SettingOption.TimeSettings) {
+        }  else if (setting instanceof SettingOption.TimeSettings) {
             SettingOption.TimeSettings timeSettings = (SettingOption.TimeSettings) setting;
             return SettingOption.of(timeSettings);
             // Now you can access timeSettings.time
