@@ -5,9 +5,12 @@ import com.sasoop.server.common.dto.ErrorResponse;
 import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
+import com.sasoop.server.controller.dto.response.TriggerResponse;
+import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.service.AppService;
 import com.sasoop.server.service.MemberService;
+import com.sasoop.server.service.TriggerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,6 +32,7 @@ import java.util.List;
 public class AppController {
     private final AppService appService;
     private final MemberService memberService;
+    private final TriggerService triggerService;
 
 
     @Operation(summary = "앱 추가 / 삭제")
@@ -115,9 +119,10 @@ public class AppController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @PatchMapping("{memberId}/{appId}/advanced-status")
-    public ResponseEntity<APIResponse<AppResponse.AppInfo>> advancedActivate(@PathVariable("memberId") Long memberId, @PathVariable("appId") Long appId, @RequestBody AppRequest.Activate activate) {
+    public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> advancedActivate(@PathVariable("memberId") Long memberId, @PathVariable("appId") Long appId, @RequestBody AppRequest.Activate activate) {
         Member getMember = memberService.findByMemberId(memberId); //유저 조회
-        APIResponse response = appService.updateAdvancedActivate(appId, activate.isActivate(), getMember);
+        App getApp = appService.updateAdvancedActivate(appId, activate.isActivate(), getMember);
+        APIResponse response = triggerService.getTriggers(getApp);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

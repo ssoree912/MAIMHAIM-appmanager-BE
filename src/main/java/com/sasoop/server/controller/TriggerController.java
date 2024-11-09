@@ -51,10 +51,11 @@ public class TriggerController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @PatchMapping("/{appId}/triggers/{triggerId}/status")
-    public ResponseEntity<APIResponse<TriggerResponse.Trigger>> activateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
+    public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> activateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
                                                                                 @RequestBody AppRequest.Activate activate){
         App getApp = appService.findById(appId);
-        APIResponse response = triggerService.activateTrigger(getApp, triggerId, activate);
+        triggerService.activateTrigger(getApp, triggerId, activate);
+        APIResponse response = triggerService.getTriggers(getApp);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -67,10 +68,11 @@ public class TriggerController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @PatchMapping("/{appId}/triggers/{triggerId}")
-    public ResponseEntity<APIResponse<TriggerResponse.Trigger>> updateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
+    public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> updateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
                                                                                 @RequestBody TriggerRequest.UpdateTrigger triggerRequest){
         App getApp = appService.findById(appId);
-        APIResponse response = triggerService.updateTrigger(getApp, triggerId, triggerRequest);
+        triggerService.updateTrigger(getApp, triggerId, triggerRequest);
+        APIResponse response = triggerService.getTriggers(getApp);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

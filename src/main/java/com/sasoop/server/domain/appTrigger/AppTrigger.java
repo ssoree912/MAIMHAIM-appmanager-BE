@@ -3,19 +3,16 @@ package com.sasoop.server.domain.appTrigger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sasoop.server.common.BaseTimeEntity;
 import com.sasoop.server.controller.dto.request.TriggerRequest;
-import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.handler.JsonConverter;
-import com.sasoop.server.handler.StringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -29,7 +26,7 @@ public class AppTrigger extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
     private boolean activate;
-    private String urlScheme;
+//    private String urlScheme;
 
     @Column(columnDefinition = "text")
     @Convert(converter = JsonConverter.class)

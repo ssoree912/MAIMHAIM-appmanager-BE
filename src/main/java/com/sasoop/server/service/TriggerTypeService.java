@@ -3,6 +3,7 @@ package com.sasoop.server.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sasoop.server.controller.dto.request.TriggerTypeRequest;
+import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.triggerType.SettingOption;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
@@ -45,6 +46,13 @@ public class TriggerTypeService {
         }
     }
 
+    public <T> T getValueAsObject(AppTrigger appTrigger, Class<T> targetType) {
+        try {
+            return objectMapper.treeToValue(appTrigger.getTriggerValue(), targetType);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error converting JSON to " + targetType.getSimpleName(), e);
+        }
+    }
     public <T> T getSettingOptionsAsObject(TriggerType triggerType, Class<T> targetType) {
         try {
             return objectMapper.treeToValue(triggerType.getSettingOptions(), targetType);
@@ -59,6 +67,25 @@ public class TriggerTypeService {
                 return getSettingOptionsAsObject(triggerType, SettingOption.LocationSettings.class);
             case TIME:
                 return getSettingOptionsAsObject(triggerType, SettingOption.TimeSettings.class);
+            default:
+                throw new IllegalArgumentException("Unsupported SettingType");
+        }
+    }
+
+    public <T> T getSettingValuesObject(AppTrigger appTrigger, Class<T> targetType) {
+        try {
+            return objectMapper.treeToValue(appTrigger.getTriggerValue(), targetType);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error converting JSON to " + targetType.getSimpleName(), e);
+        }
+    }
+
+    public Object getValue(AppTrigger appTrigger ,TriggerType triggerType) {
+        switch (triggerType.getSettingType()) {
+            case LOCATION:
+                return getSettingValuesObject(appTrigger, SettingOption.LocationSettings.class);
+            case TIME:
+                return getSettingValuesObject(appTrigger, SettingOption.TimeSettings.class);
             default:
                 throw new IllegalArgumentException("Unsupported SettingType");
         }

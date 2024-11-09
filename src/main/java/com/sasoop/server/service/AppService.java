@@ -5,8 +5,10 @@ import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.controller.dto.response.InnerSettingResponse;
+import com.sasoop.server.controller.dto.response.TriggerResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.app.AppRepository;
+import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.category.Category;
 import com.sasoop.server.domain.category.CategoryRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
@@ -16,6 +18,7 @@ import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,16 +72,16 @@ public class AppService {
         return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
     }
 
-    public APIResponse<AppResponse.AppInfo> updateAdvancedActivate(Long appId, boolean activate, Member member) {
+    public App updateAdvancedActivate(Long appId, boolean activate, Member member) {
         App app = validateMemberAndApp(member,appId);
 
         if(!app.isAdd() && !app.isActivate()) throw new IllegalArgumentException("App did not activate and add yet");
 
         app.updateAdvancedActivate(activate);
+        AppTrigger appTrigger = app.getAppTriggers().get(1);
+        appTrigger.updateActivate(activate);
         App updatedApp = appRepository.save(app);
-        AppResponse.AppInfo appInfo = new AppResponse.AppInfo(updatedApp);
-
-        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appInfo);
+       return app;
     }
     public List<AppResponse.AppInfo> findByFilter( String keyword, Member member) {
         List<App> apps = appRepository.findByMemberAndKeywordk( keyword, member).orElse(Collections.emptyList());
@@ -118,12 +121,9 @@ public class AppService {
             if(!validateApp(appSetting,member)) continue;
             ManagedApp managedApp = findByPackageName(appSetting.getPackageName());
             App app = App.toEntity(appSetting, member,false, managedApp);
-            if(app.getPackageName().equals("com.lgt.tmoney")) {
-                app.updateAdvancedActivate(true);
-                member.updateShakerApp(app);
-            }
             App savedApp = appRepository.save(app);
             triggerService.createTrigger(SettingType.LOCATION, app);
+            triggerService.createTrigger(SettingType.TIME, app);
 //            시연용
             savedApps.add(savedApp);
         }
