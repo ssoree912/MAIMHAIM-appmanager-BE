@@ -33,7 +33,6 @@ public class TriggerResponse {
             this.triggerId = appTrigger.getTriggerId();
             this.activate = appTrigger.isActivate();
             this.name = appTrigger.getName();
-            this.url = appTrigger.getUrlScheme();
             this.triggerValue = triggerValue;
         }
 

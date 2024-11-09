@@ -14,8 +14,6 @@ import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.appTrigger.AppTriggerRepository;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.detailFunction.DetailFunctionRepository;
-import com.sasoop.server.domain.member.Member;
-import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.domain.triggerType.TriggerTypeRepository;
@@ -38,14 +36,13 @@ public class TriggerService {
     private final DetailFunctionRepository detailFunctionRepository;
     private final TriggerTypeRepository triggerTypeRepository;
     private final ObjectMapper objectMapper;
-    private final MemberRepository memberRepository;
 
     public APIResponse<TriggerResponse.AppTriggers> getTriggers(App app){
         AppResponse.AppInfo appInfo = new AppResponse.AppInfo(app);
         List<AppTrigger> appTriggers = appTriggerRepository.findByApp(app).orElse(Collections.emptyList());
         List<TriggerResponse.Trigger> triggers = new ArrayList<>();
         for(AppTrigger appTrigger : appTriggers){
-            TriggerResponse.Trigger trigger = TriggerResponse.of(appTrigger,triggerTypeService.getSettingOptions(appTrigger.getTriggerType()));
+            TriggerResponse.Trigger trigger = TriggerResponse.of(appTrigger,triggerTypeService.getValue(appTrigger,appTrigger.getTriggerType()));
             triggers.add(trigger);
         }
         APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, new TriggerResponse.AppTriggers(appInfo, triggers));
@@ -60,28 +57,29 @@ public class TriggerService {
 
     public APIResponse<TriggerResponse.Trigger> getCreatedTrigger(App app, TriggerRequest.CreateTrigger triggerRequest){
         AppTrigger appTrigger = createTrigger(app,triggerRequest);
-        return APIResponse.of(SuccessCode.INSERT_SUCCESS, appTrigger);
+        TriggerResponse.Trigger response = TriggerResponse.of(appTrigger,triggerTypeService.getSettingOptions(appTrigger.getTriggerType()));
+        return APIResponse.of(SuccessCode.INSERT_SUCCESS, response);
     }
 
 
-    public APIResponse<TriggerResponse.Trigger> activateTrigger(App app, Long triggerId, AppRequest.Activate activate){
+    public void activateTrigger(App app, Long triggerId, AppRequest.Activate activate){
         AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
 //        모션 트리거의 경우 shakerapp변경,기존 모션 트리거 끄기
         getTrigger.updateActivate(activate.isActivate());
         AppTrigger appTrigger = appTriggerRepository.save(getTrigger);
         TriggerResponse.Trigger<?> triggerResponse = TriggerResponse.of(appTrigger, appTrigger.getTriggerValue()); // triggerValue가 필요하다면 전달
 
-        return APIResponse.of(SuccessCode.UPDATE_SUCCESS, triggerResponse);
+//        return app;
     }
 
-    public APIResponse<TriggerResponse.Trigger> updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
+    public void updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
         try {
             AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             getTrigger.updateTriggerValue(triggerValue);
             getTrigger.updateActivate(true);
-            AppTrigger appTrigger = appTriggerRepository.save(getTrigger);
-            return APIResponse.of(SuccessCode.UPDATE_SUCCESS, appTrigger);
+            appTriggerRepository.save(getTrigger);
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

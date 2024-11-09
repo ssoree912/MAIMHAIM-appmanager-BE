@@ -32,6 +32,7 @@ public class SettingOption {
     @Getter
     @Setter
     public static class TimeSettings{
+        private String week;
         private String time;
     }
 

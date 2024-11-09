@@ -39,9 +39,6 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<App> apps = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name="shaker_app_id")
-    private App shakerApp;
 
     public void updateActivate(boolean activate) {
         this.activate = activate;
@@ -57,9 +54,7 @@ public class Member extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateShakerApp(App shakerApp) {
-        this.shakerApp = shakerApp;
-    }
+
 
     public void addCount() {
         this.count +=1;

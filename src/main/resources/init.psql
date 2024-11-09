@@ -18,7 +18,7 @@ values (2,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/
 insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
 values (1,1,now(),now(),'앱 실행') , (2,2,now(),now(),'앱 실행') , (3,3,now(),now(),'앱 실행') , (4,5,now(),now(),'앱 실행') , (5,5,now(),now(),'앱 실행'),(6,6,now(),now(),'앱 실행'),(7,7,now(),now(),'앱 실행') ;
 
-insert into trigger_type (trigger_type_id,create_date, modified_date, setting_options, setting_type, trigger_type_name) VALUES (1,now(),now(),'{"run": true, "popUp": false, "location": ["BSSID"] }','LOCATION','default_location');
+insert into trigger_type (trigger_type_id,create_date, modified_date, setting_options, setting_type, trigger_type_name) VALUES (1,now(),now(),'{"run": true, "popUp": false, "location": ["BSSID"] }','LOCATION','default_location') ,(3,now(),now(),'{"time": "", "week": "TTTTTTT" }','TIME','default');
 --insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)/
 --values (1,1,now(),now(),'앱 실행') , (2,1,now(),now(),'메뉴') , (3,1,now(),now(),'쿠폰함'), (4,1,now(),now(),'적립창') ;
 --insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
