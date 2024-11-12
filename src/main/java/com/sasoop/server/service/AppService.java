@@ -124,6 +124,7 @@ public class AppService {
             App savedApp = appRepository.save(app);
             triggerService.createTrigger(SettingType.LOCATION, app);
             triggerService.createTrigger(SettingType.TIME, app);
+            triggerService.createTrigger(SettingType.SCHEDULE, app);
 //            시연용
             savedApps.add(savedApp);
         }
