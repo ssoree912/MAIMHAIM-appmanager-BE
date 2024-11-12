@@ -122,7 +122,7 @@ public class AppController {
     public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> advancedActivate(@PathVariable("memberId") Long memberId, @PathVariable("appId") Long appId, @RequestBody AppRequest.Activate activate) {
         Member getMember = memberService.findByMemberId(memberId); //유저 조회
         App getApp = appService.updateAdvancedActivate(appId, activate.isActivate(), getMember);
-        APIResponse response = triggerService.getTriggers(getApp);
+        APIResponse response = triggerService.getTriggers(getApp,null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

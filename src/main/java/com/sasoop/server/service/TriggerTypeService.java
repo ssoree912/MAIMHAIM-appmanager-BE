@@ -105,5 +105,8 @@ public class TriggerTypeService {
             throw new IllegalArgumentException("Invalid SettingType");
         }
     }
+    public TriggerType findByTriggerType(SettingType settingType) {
+        return triggerTypeRepository.findBySettingType(settingType).orElseThrow(()-> new IllegalArgumentException("Invalid SettingType"));
+    }
 
 }

@@ -81,7 +81,7 @@ public class AppService {
         AppTrigger appTrigger = app.getAppTriggers().get(1);
         appTrigger.updateActivate(activate);
         App updatedApp = appRepository.save(app);
-       return app;
+       return updatedApp;
     }
     public List<AppResponse.AppInfo> findByFilter( String keyword, Member member) {
         List<App> apps = appRepository.findByMemberAndKeywordk( keyword, member).orElse(Collections.emptyList());
@@ -156,22 +156,22 @@ public class AppService {
         return appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
     }
 
-    public InnerSettingResponse.PackageName getLocationPackageName(Member member, String location){
-        String packageName = "";
-        InnerSettingResponse.PackageName response = new InnerSettingResponse.PackageName(packageName);
-        ManagedApp managedApp = managedAppRepository.findByApBSSIDContaining(location).orElse(null);
-        if(managedApp != null){
-            log.info(managedApp.getName());
-            App app = appRepository.findByMemberAndManagedApp(member, managedApp).orElse(null);
-            if(app != null){
-                if(validateActivate(app)) packageName = app.getPackageName();
-                member.addCount();
-                memberRepository.save(member);
-                response.setPackageName(packageName);
-            }
-        }
-        return response;
-    }
+//    public InnerSettingResponse.PackageName getLocationPackageName(Member member, String location){
+//        String packageName = "";
+//        InnerSettingResponse.PackageName response = new InnerSettingResponse.PackageName(packageName);
+//        ManagedApp managedApp = managedAppRepository.findByApBSSIDContaining(location).orElse(null);
+//        if(managedApp != null){
+//            log.info(managedApp.getName());
+//            App app = appRepository.findByMemberAndManagedApp(member, managedApp).orElse(null);
+//            if(app != null){
+//                if(validateActivate(app)) packageName = app.getPackageName();
+//                member.addCount();
+//                memberRepository.save(member);
+//                response.setPackageName(packageName);
+//            }
+//        }
+//        return response;
+//    }
 
     private boolean validateActivate(App app){
 //        앱 활성화 반펼

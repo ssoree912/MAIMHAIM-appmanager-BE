@@ -41,6 +41,7 @@ public class AppResponse {
         private boolean advancedActivate;
         private String image;
         private String packageName;
+        private String ssid;
 
 
         public AppInfo(App app) {
@@ -51,6 +52,7 @@ public class AppResponse {
             this.advancedActivate = app.isAdvancedActivate();
             this.image = app.getManagedApp().getImageUrl();
             this.packageName = app.getManagedApp().getPackageName();
+            this.ssid = app.getManagedApp().getSSID();
         }
     }
 
