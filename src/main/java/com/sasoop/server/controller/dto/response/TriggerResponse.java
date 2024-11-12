@@ -1,6 +1,8 @@
 package com.sasoop.server.controller.dto.response;
 
 import com.sasoop.server.domain.appTrigger.AppTrigger;
+import com.sasoop.server.domain.triggerType.SettingType;
+import jdk.jfr.ContentType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +29,7 @@ public class TriggerResponse {
         private String name;
         private String url;
         private boolean foreGround;
+        private SettingType type;
         private T triggerValue;
 
 
@@ -35,6 +38,7 @@ public class TriggerResponse {
             this.activate = appTrigger.isActivate();
             this.name = appTrigger.getName();
             this.foreGround = appTrigger.isForeGround();
+            this.type = appTrigger.getTriggerType().getSettingType();
             this.triggerValue = triggerValue;
         }
 
