@@ -7,8 +7,10 @@ import com.sasoop.server.controller.dto.request.TriggerRequest;
 import com.sasoop.server.controller.dto.response.TriggerResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.triggerType.SettingType;
+import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.service.AppService;
 import com.sasoop.server.service.TriggerService;
+import com.sasoop.server.service.TriggerTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class TriggerController {
     private final TriggerService triggerService;
     private final AppService appService;
+    private final TriggerTypeService triggerTypeService;
 
 
     @Operation(summary = "앱에 따른 트리거 값 조회")
@@ -37,9 +40,10 @@ public class TriggerController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @GetMapping("/{appId}/triggers")
-    public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> getTriggers(@PathVariable("appId") Long appId){
+    public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> getTriggers(@PathVariable("appId") Long appId , @RequestParam(required = false)SettingType settingType){
         App getApp = appService.findById(appId);
-        APIResponse response = triggerService.getTriggers(getApp);
+        TriggerType triggerType = (settingType != null ) ? triggerTypeService.findByTriggerType(settingType) : null;
+        APIResponse response = triggerService.getTriggers(getApp,triggerType);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -55,7 +59,7 @@ public class TriggerController {
                                                                                 @RequestBody AppRequest.Activate activate){
         App getApp = appService.findById(appId);
         triggerService.activateTrigger(getApp, triggerId, activate);
-        APIResponse response = triggerService.getTriggers(getApp);
+        APIResponse response = triggerService.getTriggers(getApp,null);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -72,7 +76,7 @@ public class TriggerController {
                                                                                 @RequestBody TriggerRequest.UpdateTrigger triggerRequest){
         App getApp = appService.findById(appId);
         triggerService.updateTrigger(getApp, triggerId, triggerRequest);
-        APIResponse response = triggerService.getTriggers(getApp);
+        APIResponse response = triggerService.getTriggers(getApp,null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

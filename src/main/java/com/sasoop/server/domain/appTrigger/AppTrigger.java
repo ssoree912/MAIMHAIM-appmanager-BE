@@ -26,6 +26,7 @@ public class AppTrigger extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
     private boolean activate;
+    private boolean foreGround;
 //    private String urlScheme;
 
     @Column(columnDefinition = "text")
@@ -52,6 +53,10 @@ public class AppTrigger extends BaseTimeEntity {
         this.triggerValue = triggerValue;
     }
 
+    public void updateForeGround(boolean foreGround) {
+        this.foreGround = foreGround;
+    }
+
     public static AppTrigger toEntity(TriggerRequest.CreateTrigger triggerRequest, JsonNode triggerValue, App app, TriggerType triggerType, DetailFunction detailFunction) {
         return AppTrigger.builder()
                 .name(triggerType.getTriggerTypeName())
@@ -68,6 +73,7 @@ public class AppTrigger extends BaseTimeEntity {
                 .name(triggerType.getTriggerTypeName())
                 .activate(triggerType.getSettingType().equals(SettingType.LOCATION) ? true : false)
                 .triggerValue(triggerValue)
+                .foreGround(true)
                 .function(detailFunction)
                 .app(app)
                 .triggerType(triggerType)

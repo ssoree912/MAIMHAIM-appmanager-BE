@@ -26,6 +26,7 @@ public class TriggerResponse {
         private boolean activate;
         private String name;
         private String url;
+        private boolean foreGround;
         private T triggerValue;
 
 
@@ -33,6 +34,7 @@ public class TriggerResponse {
             this.triggerId = appTrigger.getTriggerId();
             this.activate = appTrigger.isActivate();
             this.name = appTrigger.getName();
+            this.foreGround = appTrigger.isForeGround();
             this.triggerValue = triggerValue;
         }
 

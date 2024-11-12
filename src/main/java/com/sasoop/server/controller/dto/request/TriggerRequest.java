@@ -13,6 +13,7 @@ public class TriggerRequest {
         private Long triggerTypeId;
 //        private Long functionId;
 //        @Schema(example = "{\"run\": false, \"popUp\": false}")
+        private boolean foreGround;
         private String triggerValue;
 
         private boolean activate;
@@ -23,6 +24,7 @@ public class TriggerRequest {
     @Getter
     @Setter
     public static class UpdateTrigger{
+        private boolean foreGround;
         private String triggerValue;
     }
 

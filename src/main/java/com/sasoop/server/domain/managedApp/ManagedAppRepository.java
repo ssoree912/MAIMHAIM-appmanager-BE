@@ -10,9 +10,9 @@ public interface ManagedAppRepository extends JpaRepository<ManagedApp, Long> {
     boolean existsByPackageName(String packageName);
     Optional<ManagedApp> findByPackageName(String packageName);
 
-    @Query("SELECT m FROM ManagedApp m WHERE m.apBSSID LIKE %:apBSSID%")
-    Optional<ManagedApp> findByApBSSIDContaining(@Param("apBSSID") String apBSSID);
-    Optional<ManagedApp> findByApBSSID(String apBSSID);
-    boolean existsByApBSSID(String apBSSID);
+//    @Query("SELECT m FROM ManagedApp m WHERE m.apBSSID LIKE %:apBSSID%")
+//    Optional<ManagedApp> findByApBSSIDContaining(@Param("apBSSID") String apBSSID);
+//    Optional<ManagedApp> findByApBSSID(String apBSSID);
+//    boolean existsByApBSSID(String apBSSID);
 
 }

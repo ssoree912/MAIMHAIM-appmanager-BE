@@ -33,21 +33,21 @@ public class InnerController {
     private final TriggerService triggerService;
 
 
-    @Tag(name = "App")
-    @Operation(summary = "안드로이드 트리거 값 요청시 관련 패키지 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-    })
-    @GetMapping("/{memberId}/")
-    public ResponseEntity<APIResponse> validateTrigger(@PathVariable("memberId") Long memberId, @RequestParam SettingType settingType, @RequestParam(required = false) String value){
-        Member getMember = memberService.findByMemberId(memberId);
-        InnerSettingResponse.PackageName packageName = appService.getLocationPackageName(getMember, value);
-        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, packageName);
-        return ResponseEntity.ok(response);
-    }
+//    @Tag(name = "App")
+//    @Operation(summary = "안드로이드 트리거 값 요청시 관련 패키지 조회")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "성공"),
+//            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+//    })
+//    @GetMapping("/{memberId}/")
+//    public ResponseEntity<APIResponse> validateTrigger(@PathVariable("memberId") Long memberId, @RequestParam SettingType settingType, @RequestParam(required = false) String value){
+//        Member getMember = memberService.findByMemberId(memberId);
+//        InnerSettingResponse.PackageName packageName = appService.getLocationPackageName(getMember, value);
+//        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, packageName);
+//        return ResponseEntity.ok(response);
+//    }
 
     @Operation(summary = "트리거 추가")
     @ApiResponses(value = {

@@ -10,6 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AppTriggerRepository extends JpaRepository<AppTrigger, Long> {
+    @Query("SELECT at FROM AppTrigger at" +
+            " WHERE at.app = :app " +
+            "AND (:triggerType IS NULL OR at.triggerType = :triggerType)")
+    Optional<List<AppTrigger>> findByAppAndOptionalTriggerType(
+            @Param("app") App app,
+            @Param("triggerType") TriggerType triggerType);
     Optional<List<AppTrigger>> findByApp(App app);
 
     Optional<List<AppTrigger>> findByTriggerType(TriggerType triggerType);

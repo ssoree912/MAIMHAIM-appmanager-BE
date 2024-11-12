@@ -37,9 +37,9 @@ public class TriggerService {
     private final TriggerTypeRepository triggerTypeRepository;
     private final ObjectMapper objectMapper;
 
-    public APIResponse<TriggerResponse.AppTriggers> getTriggers(App app){
+    public APIResponse<TriggerResponse.AppTriggers> getTriggers(App app,TriggerType triggerType){
         AppResponse.AppInfo appInfo = new AppResponse.AppInfo(app);
-        List<AppTrigger> appTriggers = appTriggerRepository.findByApp(app).orElse(Collections.emptyList());
+        List<AppTrigger> appTriggers = appTriggerRepository.findByAppAndOptionalTriggerType(app,triggerType).orElse(Collections.emptyList());
         List<TriggerResponse.Trigger> triggers = new ArrayList<>();
         for(AppTrigger appTrigger : appTriggers){
             TriggerResponse.Trigger trigger = TriggerResponse.of(appTrigger,triggerTypeService.getValue(appTrigger,appTrigger.getTriggerType()));
@@ -77,6 +77,7 @@ public class TriggerService {
             AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
             JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
             getTrigger.updateTriggerValue(triggerValue);
+            getTrigger.updateForeGround(triggerRequest.isForeGround());
             getTrigger.updateActivate(true);
             appTriggerRepository.save(getTrigger);
 
