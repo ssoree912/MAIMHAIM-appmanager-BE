@@ -86,6 +86,8 @@ public class TriggerTypeService {
                 return getSettingValuesObject(appTrigger, SettingOption.LocationSettings.class);
             case TIME:
                 return getSettingValuesObject(appTrigger, SettingOption.TimeSettings.class);
+            case SCHEDULE:
+                return getSettingValuesObject(appTrigger,SettingOption.TimeSettings.class);
             default:
                 throw new IllegalArgumentException("Unsupported SettingType");
         }
