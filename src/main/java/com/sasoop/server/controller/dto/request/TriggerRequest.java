@@ -1,5 +1,6 @@
 package com.sasoop.server.controller.dto.request;
 
+import com.sasoop.server.domain.triggerType.SettingType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class TriggerRequest {
     public static class UpdateTrigger{
         private boolean foreGround;
         private String triggerValue;
+        private SettingType type;
     }
 
     @Getter

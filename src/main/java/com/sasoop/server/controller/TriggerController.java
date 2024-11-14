@@ -31,7 +31,6 @@ public class TriggerController {
     private final AppService appService;
     private final TriggerTypeService triggerTypeService;
 
-
     @Operation(summary = "앱에 따른 트리거 값 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
@@ -75,6 +74,7 @@ public class TriggerController {
     public ResponseEntity<APIResponse<TriggerResponse.AppTriggers>> updateTrigger(@PathVariable("appId") Long appId, @PathVariable("triggerId") Long triggerId,
                                                                                 @RequestBody TriggerRequest.UpdateTrigger triggerRequest){
         App getApp = appService.findById(appId);
+        appService.updateType(getApp,triggerRequest.getType());
         triggerService.updateTrigger(getApp, triggerId, triggerRequest);
         APIResponse response = triggerService.getTriggers(getApp,null);
         return new ResponseEntity<>(response, HttpStatus.OK);

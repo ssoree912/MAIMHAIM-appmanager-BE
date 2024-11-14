@@ -74,6 +74,7 @@ public class TriggerService {
 
     public void updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
         AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
+        if(!triggerRequest.getType().equals(getTrigger.getTriggerType().getSettingType())) throw new IllegalArgumentException("바꿀 트리거타입과 트리거 id가 같지 않습니다");
         getTrigger.updateForeGround(triggerRequest.isForeGround());
         if(triggerRequest.getTriggerValue() != "" && triggerRequest.getTriggerValue() != null){
             try {
