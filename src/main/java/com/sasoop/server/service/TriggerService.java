@@ -73,17 +73,19 @@ public class TriggerService {
     }
 
     public void updateTrigger(App app, Long triggerId, TriggerRequest.UpdateTrigger triggerRequest){
-        try {
-            AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
-            JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
-            getTrigger.updateTriggerValue(triggerValue);
-            getTrigger.updateForeGround(triggerRequest.isForeGround());
-            getTrigger.updateActivate(true);
-            appTriggerRepository.save(getTrigger);
+        AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
+        getTrigger.updateForeGround(triggerRequest.isForeGround());
+        if(triggerRequest.getTriggerValue() != "" && triggerRequest.getTriggerValue() != null){
+            try {
+                JsonNode triggerValue = objectMapper.readTree(triggerRequest.getTriggerValue());
+                getTrigger.updateTriggerValue(triggerValue);
+                getTrigger.updateActivate(true);
 
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
+        appTriggerRepository.save(getTrigger);
     }
 
     private AppTrigger validateAppAndTrigger(App app, Long triggerId){
