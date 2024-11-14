@@ -2,6 +2,7 @@ package com.sasoop.server.controller.dto.response;
 
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.category.Category;
+import com.sasoop.server.domain.triggerType.SettingType;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -42,6 +43,7 @@ public class AppResponse {
         private String image;
         private String packageName;
         private String ssid;
+        private SettingType type;
 
 
         public AppInfo(App app) {
@@ -53,6 +55,7 @@ public class AppResponse {
             this.image = app.getManagedApp().getImageUrl();
             this.packageName = app.getManagedApp().getPackageName();
             this.ssid = app.getManagedApp().getSSID();
+            this.type = app.getSettingType();
         }
     }
 

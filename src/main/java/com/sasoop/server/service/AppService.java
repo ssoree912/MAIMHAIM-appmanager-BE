@@ -12,11 +12,11 @@ import com.sasoop.server.domain.category.CategoryRepository;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.managedApp.ManagedAppRepository;
 import com.sasoop.server.domain.member.Member;
-import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,6 @@ public class AppService {
     private final ManagedAppRepository managedAppRepository;
     private final CategoryRepository categoryRepository;
     private final TriggerService triggerService;
-    private final MemberRepository memberRepository;
 
     /**
      * 내가 가진 앱 추가
@@ -176,6 +175,12 @@ public class AppService {
 //        앱 활성화 반펼
         if(app.isActivate() && app.isAdd()) return true;
         return false;
+    }
+
+    @Transactional
+    public void updateType(App app, SettingType settingType){
+        app.updateSettingType(settingType);
+        appRepository.save(app);
     }
 
 

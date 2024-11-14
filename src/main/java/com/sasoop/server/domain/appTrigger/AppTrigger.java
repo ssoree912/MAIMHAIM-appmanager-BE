@@ -14,6 +14,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -69,9 +71,15 @@ public class AppTrigger extends BaseTimeEntity {
 
     }
     public static AppTrigger toEntity( JsonNode triggerValue, App app, TriggerType triggerType, DetailFunction detailFunction) {
+        boolean defaultActive = false;
+        if(app.getManagedApp().getSSID().equals("gs25") && triggerType.getSettingType().equals(SettingType.MOTION)){
+            defaultActive = true;
+        }else if (!app.getManagedApp().getSSID().equals("gs25") && triggerType.getSettingType().equals(SettingType.LOCATION)){
+            defaultActive = true;
+        }
         return AppTrigger.builder()
                 .name(triggerType.getTriggerTypeName())
-                .activate(triggerType.getSettingType().equals(SettingType.LOCATION) ? true : false)
+                .activate(defaultActive)
                 .triggerValue(triggerValue)
                 .foreGround(true)
                 .function(detailFunction)

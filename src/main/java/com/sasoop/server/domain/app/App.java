@@ -5,6 +5,7 @@ import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.managedApp.ManagedApp;
 import com.sasoop.server.domain.member.Member;
+import com.sasoop.server.domain.triggerType.SettingType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,10 @@ public class App extends BaseTimeEntity {
     private String uid;
     private boolean add;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private SettingType settingType;
+
     @ManyToOne
     @JoinColumn(name="member_id")
     private Member member;
@@ -49,6 +54,7 @@ public class App extends BaseTimeEntity {
                 .advancedActivate(false)
                 .packageName(appSetting.getPackageName())
                 .add(add)
+                .settingType(managedApp.getSSID().equals("gs25")?SettingType.MOTION : SettingType.LOCATION)
                 .uid(appSetting.getUid())
                 .build();
     }
@@ -63,5 +69,9 @@ public class App extends BaseTimeEntity {
 
     public void updateAdd(boolean add) {
         this.add = add;
+    }
+
+    public void updateSettingType(SettingType settingType) {
+        this.settingType = settingType;
     }
 }
