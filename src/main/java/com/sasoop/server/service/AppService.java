@@ -4,8 +4,6 @@ import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.AppRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
-import com.sasoop.server.controller.dto.response.InnerSettingResponse;
-import com.sasoop.server.controller.dto.response.TriggerResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.app.AppRepository;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
@@ -18,7 +16,6 @@ import com.sasoop.server.domain.member.MemberRepository;
 import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -125,6 +122,7 @@ public class AppService {
             triggerService.createTrigger(SettingType.LOCATION, app);
             triggerService.createTrigger(SettingType.TIME, app);
             triggerService.createTrigger(SettingType.SCHEDULE, app);
+            triggerService.createTrigger(SettingType.MOTION, app);
 //            시연용
             savedApps.add(savedApp);
         }

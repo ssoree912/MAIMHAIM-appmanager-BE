@@ -67,6 +67,8 @@ public class TriggerTypeService {
                 return getSettingOptionsAsObject(triggerType, SettingOption.LocationSettings.class);
             case TIME:
                 return getSettingOptionsAsObject(triggerType, SettingOption.TimeSettings.class);
+            case MOTION:
+                return getSettingOptionsAsObject(triggerType, SettingOption.MotionSettings.class);
             default:
                 throw new IllegalArgumentException("Unsupported SettingType");
         }
@@ -88,6 +90,8 @@ public class TriggerTypeService {
                 return getSettingValuesObject(appTrigger, SettingOption.TimeSettings.class);
             case SCHEDULE:
                 return getSettingValuesObject(appTrigger,SettingOption.TimeSettings.class);
+            case MOTION:
+                return getSettingValuesObject(appTrigger, SettingOption.MotionSettings.class);
             default:
                 throw new IllegalArgumentException("Unsupported SettingType");
         }
