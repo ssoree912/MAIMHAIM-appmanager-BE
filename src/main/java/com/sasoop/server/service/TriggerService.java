@@ -65,6 +65,13 @@ public class TriggerService {
     public void activateTrigger(App app, Long triggerId, AppRequest.Activate activate){
         AppTrigger getTrigger = validateAppAndTrigger(app,triggerId);
 //        모션 트리거의 경우 shakerapp변경,기존 모션 트리거 끄기
+        if(activate.isActivate()){
+            List<AppTrigger> appTriggers = getTrigger.getApp().getAppTriggers();
+            for(AppTrigger appTrigger : appTriggers){
+                appTrigger.updateActivate(false);
+                appTriggerRepository.save(appTrigger);
+            }
+        }
         getTrigger.updateActivate(activate.isActivate());
         AppTrigger appTrigger = appTriggerRepository.save(getTrigger);
         TriggerResponse.Trigger<?> triggerResponse = TriggerResponse.of(appTrigger, appTrigger.getTriggerValue()); // triggerValue가 필요하다면 전달
