@@ -29,8 +29,7 @@ public class SettingOption {
     @Setter
     public static class LocationSettings{
 
-        boolean run;
-        boolean popUp;
+//        boolean run;
         List<String> locations;
     }
 

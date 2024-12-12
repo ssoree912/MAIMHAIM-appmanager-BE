@@ -1,8 +1,7 @@
-package com.sasoop.server.domain.eventLogs;
+package com.sasoop.server.domain.triggerRaw;
 
 import com.sasoop.server.common.BaseTimeEntity;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
-import com.sasoop.server.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,22 +13,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventLogs extends BaseTimeEntity {
+public class TriggerRaw extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eventLogId;
+    private Long triggerRawId;
 
     @Column
-    private String description;
+    private String location;
+    private String address;
+    private String latitude;
+    private String longitude;
 
     @ManyToOne
-    @JoinColumn(name="member_id")
-    private Member member;
-
-    @ManyToOne
-    @JoinColumn(name = "app_triiger_id")
+    @JoinColumn(name = "trigger_id")
     private AppTrigger appTrigger;
-
-
-
 }
