@@ -1,0 +1,29 @@
+insert into category (category_id,create_date, modified_date, name)
+values (1, now(),now(),'식음료') ,  (2, now(),now(),'교통'), (3, now(),now(),'금융'), (4, now(),now(),'증권 및 투자'), (5, now(),now(),'교육'),(6, now(),now(),'쇼핑'),(7, now(),now(),'편의점');
+insert into managed_app (managed_app_id,category_id, image_url, main_url, name, package_name,create_date,modified_date,ssid)
+values (2,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/holllys.png', 'url', '할리스 커피', 'com.kr.hollyscoffee',now(),now(),'hollys'),
+       (3,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/starbucks.png', 'url', '스타벅스', 'com.starbucks.co',now(),now(),'starbucks'),
+       (4,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/twosome.png', 'url', '투썸플레이스', 'com.cj.twosome',now(),now(),'twosome'),
+       (5,2, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/tmoney.png', 'url', '모바일 티머니', 'com.lgt.tmoney',now(),now(),'t'),
+       (6,2, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/tmoneygo.png', 'url', '티머니 GO', 'kr.co.tmoney.tiay',now(),now(),'tmoney'),
+       (7,3, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/kb.png', 'url', '국민은행', 'com.kbstar.kbbank',now(),now(),'kb'),
+       (8,3, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/NH.png', 'url', '농협은행', 'nh.smart.banking',now(),now(),'nh'),
+       (9,3, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/hana.png', 'url', '하나은행', 'com.kebhana.hanapush',now(),now(),'hana'),
+       (11,3, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/toss.png', 'url', '토스', 'viva.republica.toss',now(),now(),'toss'),
+       (12,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/stock.png', 'url', '영웅문S#', 'com.kiwoom.heromts',now(),now(),'heromts'),
+       (13,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/hanstock.png', 'url', '한국투자증권', 'com.truefriend.neosmartarenewal',now(),now(),'neosmartarenewal'),
+       (14,5, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/kcard.png', 'url', 'K-CARD', 'kr.co.symtra.kmuid',now(),now(),'kcard'),
+       (15,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/olive.webp', 'url', '올리브영', 'com.oliveyoung',now(),now(),'oliveyoung'),
+       (16,7, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/gs.webp', 'url', '우리동네GS', 'com.gsr.gs25',now(),now(),'gs25');
+insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
+values (1,1,now(),now(),'앱 실행') , (2,2,now(),now(),'앱 실행') , (3,3,now(),now(),'앱 실행') , (4,5,now(),now(),'앱 실행') , (5,5,now(),now(),'앱 실행'),(6,6,now(),now(),'앱 실행'),(7,7,now(),now(),'앱 실행') ;
+
+insert into trigger_type (trigger_type_id,create_date, modified_date, setting_options, setting_type, trigger_type_name) VALUES (1,now(),now(),'{"run": true, "popUp": false, "location": ["BSSID"] }','LOCATION','default_location') ,(2,now(),now(),'{"time": "", "week": "TTTTTTT" }','SCHEDULE','default'),(3,now(),now(),'{"time": "", "week": "TTTTTTT" }','TIME','default'),(4,now(),now(),'{"shake": true }','MOTION','default');;
+--insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)/
+--values (1,1,now(),now(),'앱 실행') , (2,1,now(),now(),'메뉴') , (3,1,now(),now(),'쿠폰함'), (4,1,now(),now(),'적립창') ;
+--insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
+--values (5,2,now(),now(),'앱 실행') , (6,2,now(),now(),'QR 실행') , (7,2,now(),now(),'예매') , (8,2,now(),now(),'예약 내역');
+--insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
+--values (9,3,now(),now(),'앱 실행') , (10,3,now(),now(),'ATM 출금'), (11,3,now(),now(),'송금') ;
+--insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
+--values (12,4,now(),now(),'주문') , (13,4,now(),now(),'앱 실행'), (14,5,now(),now(),'QR 출석') ;
