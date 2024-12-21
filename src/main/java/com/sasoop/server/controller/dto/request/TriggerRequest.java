@@ -35,4 +35,11 @@ public class TriggerRequest {
     public static class ValidateTrigger{
         private String locations;
     }
+
+    @Getter
+    @Setter
+    public static class UpdateTriggerCount{
+        private Long memberId;
+        private SettingType type;
+    }
 }

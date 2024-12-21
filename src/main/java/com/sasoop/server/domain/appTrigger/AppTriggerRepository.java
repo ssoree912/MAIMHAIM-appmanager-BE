@@ -26,4 +26,6 @@ public interface AppTriggerRepository extends JpaRepository<AppTrigger, Long> {
     @Query("SELECT COUNT(a) > 0 FROM AppTrigger a WHERE a.app = :app AND CAST(a.triggerValue AS text) LIKE %:locationString%")
     boolean existsByAppAndTriggerValueContaining(@Param("app") App app, @Param("locationString") String locationString);
 
+    Optional<AppTrigger> findByAppAndTriggerType(App app, TriggerType triggerType);
+
 }

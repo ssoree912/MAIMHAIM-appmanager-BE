@@ -58,4 +58,18 @@ public class HomeController {
         APIResponse response = memberService.activateAppManager(activateRequest);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @Operation(summary = "전체 count 값 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "요청 형식 혹은 요청 콘텐츠가 올바르지 않을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "요청한 URL/URI와 일치하는 항목을 찾지 못함,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
+    @GetMapping("/{memberId}/count")
+    public ResponseEntity<APIResponse<MemberResponse.Count>> getCount(@PathVariable("memberId") Long memberId){
+        Member getMember = memberService.findByMemberId(memberId); //유저 조회
+        APIResponse<MemberResponse.Count> response = memberService.getCount(getMember);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

@@ -140,7 +140,7 @@ public class AppService {
         if(managedAppRepository.existsByPackageName(appSetting.getPackageName()) && !appRepository.existsByMemberAndPackageName(member,appSetting.getPackageName()) ) return true;
         return false;
     }
-    private ManagedApp findByPackageName(String packageName) {
+    public ManagedApp findByPackageName(String packageName) {
         return managedAppRepository.findByPackageName(packageName).orElseThrow(() -> new IllegalArgumentException("ManagedApp not found"));
     }
 

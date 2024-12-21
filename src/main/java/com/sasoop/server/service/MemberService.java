@@ -5,6 +5,8 @@ import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.MemberRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.controller.dto.response.MemberResponse;
+import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +49,15 @@ public class MemberService {
         return memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid memberId"));
     }
 
+    public APIResponse<MemberResponse.Count> getCount(Member getMember) {
+        List<App> apps = getMember.getApps();
+        int totalCount = 0;
+        for(App app : apps){
+            List<AppTrigger> appTriggers = app.getAppTriggers();
+            for(AppTrigger appTrigger : appTriggers){
+                totalCount += appTrigger.getCount();
+            }
+        }
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, new MemberResponse.Count(totalCount));
+    }
 }

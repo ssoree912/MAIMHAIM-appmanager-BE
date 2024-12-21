@@ -33,4 +33,6 @@ public interface AppRepository extends JpaRepository<App, Long> {
     @Query("SELECT a FROM App a WHERE a.member = :member AND a.managedApp = :managedApp")
     Optional<App> findByMemberAndManagedApp(Member member, ManagedApp managedApp);
 
+    Optional<App> findByMemberAndPackageName(Member member, String packageName);
+
 }

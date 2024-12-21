@@ -14,7 +14,12 @@ values (2,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/
        (13,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/hanstock.png', 'url', '한국투자증권', 'com.truefriend.neosmartarenewal',now(),now(),'neosmartarenewal'),
        (14,5, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/kcard.png', 'url', 'K-CARD', 'kr.co.symtra.kmuid',now(),now(),'kcard'),
        (15,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/olive.webp', 'url', '올리브영', 'com.oliveyoung',now(),now(),'oliveyoung'),
-       (16,7, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/gs.webp', 'url', '우리동네GS', 'com.gsr.gs25',now(),now(),'gs25');
+       (16,7, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/gs.webp', 'url', '우리동네GS', 'com.gsr.gs25',now(),now(),'gs25'),
+       (17,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/costco.png', 'url', 'costco', 'com.costco.dmc.store',now(),now(),'costco'),
+       (18,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/fidelity.png', 'url', 'fidelity', 'com.fidelity.wi.activity',now(),now(),'fidelity'),
+       (19,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/amazon.png', 'url', 'amazon', 'com.amazon.mShop.android.shopping',now(),now(),'amazon'),
+       (20,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/target.png', 'url', 'target', 'com.lasoo.android.target',now(),now(),'target'),
+       (21,5, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/ces.webp', 'url', 'CES 2025', 'com.cta.cestech',now(),now(),'ces');
 insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
 values (1,1,now(),now(),'앱 실행') , (2,2,now(),now(),'앱 실행') , (3,3,now(),now(),'앱 실행') , (4,5,now(),now(),'앱 실행') , (5,5,now(),now(),'앱 실행'),(6,6,now(),now(),'앱 실행'),(7,7,now(),now(),'앱 실행') ;
 

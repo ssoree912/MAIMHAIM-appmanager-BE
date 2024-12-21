@@ -10,10 +10,12 @@ import com.sasoop.server.controller.dto.request.TriggerRequest;
 import com.sasoop.server.controller.dto.response.AppResponse;
 import com.sasoop.server.controller.dto.response.TriggerResponse;
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.app.AppRepository;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.appTrigger.AppTriggerRepository;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.detailFunction.DetailFunctionRepository;
+import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.domain.triggerType.TriggerType;
 import com.sasoop.server.domain.triggerType.TriggerTypeRepository;
@@ -36,6 +38,7 @@ public class TriggerService {
     private final DetailFunctionRepository detailFunctionRepository;
     private final TriggerTypeRepository triggerTypeRepository;
     private final ObjectMapper objectMapper;
+    private final AppRepository appRepository;
 
     public APIResponse<TriggerResponse.AppTriggers> getTriggers(App app,TriggerType triggerType){
         AppResponse.AppInfo appInfo = new AppResponse.AppInfo(app);
@@ -131,4 +134,11 @@ public class TriggerService {
         return false;
     }
 
+    public void addCount(Member getMember, String packageName, TriggerRequest.UpdateTriggerCount triggerRequest) {
+        App getApp = appRepository.findByMemberAndPackageName(getMember, packageName).orElseThrow(() -> new IllegalArgumentException("App not found"));
+        TriggerType triggerType = triggerTypeRepository.findBySettingType(triggerRequest.getType()).orElseThrow(() -> new IllegalArgumentException("Invalid trigger type"));
+        AppTrigger appTrigger = appTriggerRepository.findByAppAndTriggerType(getApp, triggerType).orElseThrow(() -> new IllegalArgumentException("Trigger not found"));
+        appTrigger.addCount();
+        appTriggerRepository.save(appTrigger);
+    }
 }
