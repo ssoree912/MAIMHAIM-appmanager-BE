@@ -6,10 +6,12 @@ import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.TriggerRequest;
 import com.sasoop.server.controller.dto.response.InnerSettingResponse;
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.service.AppService;
 import com.sasoop.server.service.MemberService;
+import com.sasoop.server.service.ReportService;
 import com.sasoop.server.service.TriggerService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +33,7 @@ public class InnerController {
     private final MemberService memberService;
     private final AppService appService;
     private final TriggerService triggerService;
+    private final ReportService reportService;
 
 
 //    @Tag(name = "App")
@@ -83,6 +86,8 @@ public class InnerController {
     @PostMapping("/apps/{packageName}/count")
     public void addCount(@PathVariable String packageName, @RequestBody TriggerRequest.UpdateTriggerCount triggerRequest){
         Member getMember = memberService.findByMemberId(triggerRequest.getMemberId());
-        triggerService.addCount(getMember, packageName, triggerRequest);
+        AppTrigger appTrigger=triggerService.addCount(getMember, packageName, triggerRequest);
+        if(triggerRequest.getType().equals(SettingType.LOCATION)) reportService.saveTriggerRaw(appTrigger, triggerRequest.getRaw().getLocation(), triggerRequest.getRaw().getAddress(), triggerRequest.getRaw().getLatitude(), triggerRequest.getRaw().getLongitude());
     }
+
 }

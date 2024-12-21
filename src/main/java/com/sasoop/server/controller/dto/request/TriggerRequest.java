@@ -1,7 +1,6 @@
 package com.sasoop.server.controller.dto.request;
 
 import com.sasoop.server.domain.triggerType.SettingType;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,5 +40,16 @@ public class TriggerRequest {
     public static class UpdateTriggerCount{
         private Long memberId;
         private SettingType type;
+        private Raw raw;
+    }
+
+    @Getter
+    @Setter
+    public static class Raw {
+        private String location;
+        private String address;
+        private double latitude;
+        private double longitude;
+
     }
 }

@@ -1,7 +1,6 @@
-package com.sasoop.server.domain.triggerRaw;
+package com.sasoop.server.domain.locations;
 
 import com.sasoop.server.common.BaseTimeEntity;
-import com.sasoop.server.domain.appTrigger.AppTrigger;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TriggerRaw extends BaseTimeEntity {
+public class Locations extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long triggerRawId;
+    private Long locationId;
 
     @Column
     private String location;
@@ -24,17 +23,12 @@ public class TriggerRaw extends BaseTimeEntity {
     private double latitude;
     private double longitude;
 
-    @ManyToOne
-    @JoinColumn(name = "trigger_id")
-    private AppTrigger appTrigger;
-
-    public static TriggerRaw toEntity(String location, String address, double latitude, double longitude, AppTrigger appTrigger) {
-        return TriggerRaw.builder()
+    public static Locations toEntity(String location, String address, double latitude, double longitude) {
+        return Locations.builder()
                 .location(location)
                 .address(address)
                 .latitude(latitude)
                 .longitude(longitude)
-                .appTrigger(appTrigger)
                 .build();
     }
 

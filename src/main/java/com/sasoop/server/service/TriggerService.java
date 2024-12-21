@@ -134,11 +134,11 @@ public class TriggerService {
         return false;
     }
 
-    public void addCount(Member getMember, String packageName, TriggerRequest.UpdateTriggerCount triggerRequest) {
+    public AppTrigger addCount(Member getMember, String packageName, TriggerRequest.UpdateTriggerCount triggerRequest) {
         App getApp = appRepository.findByMemberAndPackageName(getMember, packageName).orElseThrow(() -> new IllegalArgumentException("App not found"));
         TriggerType triggerType = triggerTypeRepository.findBySettingType(triggerRequest.getType()).orElseThrow(() -> new IllegalArgumentException("Invalid trigger type"));
         AppTrigger appTrigger = appTriggerRepository.findByAppAndTriggerType(getApp, triggerType).orElseThrow(() -> new IllegalArgumentException("Trigger not found"));
         appTrigger.addCount();
-        appTriggerRepository.save(appTrigger);
+        return appTriggerRepository.save(appTrigger);
     }
 }

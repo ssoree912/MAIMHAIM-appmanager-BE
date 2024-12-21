@@ -3,6 +3,7 @@ package com.sasoop.server.domain.appTrigger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sasoop.server.common.BaseTimeEntity;
 import com.sasoop.server.controller.dto.request.TriggerRequest;
+import com.sasoop.server.domain.LocationTrigger.LocationTriggerReport;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.detailFunction.DetailFunction;
 import com.sasoop.server.domain.triggerType.SettingType;
@@ -14,7 +15,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -49,6 +51,9 @@ public class AppTrigger extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "function_id")
     private DetailFunction function;
+
+    @OneToMany(mappedBy = "appTrigger", cascade = CascadeType.ALL)
+    private List<LocationTriggerReport> locationTriggerReports = new ArrayList<>();
 
     public void updateActivate(boolean activate) {
         this.activate = activate;
