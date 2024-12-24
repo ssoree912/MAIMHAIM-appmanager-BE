@@ -1,15 +1,21 @@
 package com.sasoop.server.service;
 
 import com.sasoop.server.common.DateUtils;
+import com.sasoop.server.common.dto.APIResponse;
+import com.sasoop.server.common.dto.enums.SuccessCode;
+import com.sasoop.server.controller.dto.response.ReportResponse;
 import com.sasoop.server.domain.LocationTrigger.LocationTriggerReport;
 import com.sasoop.server.domain.LocationTrigger.LocationTriggerReportRepository;
+import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.locations.Locations;
 import com.sasoop.server.domain.locations.LocationsRepository;
+import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.domain.triggerRaw.TriggerRaw;
 import com.sasoop.server.domain.triggerRaw.TriggerRawRepository;
 import com.sasoop.server.domain.triggerReport.TriggerReport;
 import com.sasoop.server.domain.triggerReport.TriggerRortRepository;
+import com.sasoop.server.domain.triggerType.SettingType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -17,9 +23,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,4 +66,20 @@ public class ReportService {
     }
 
 
+    public APIResponse<List<ReportResponse.ReportInfo>> getReports(Member getMember, String startDate) {
+        List<App> apps = getMember.getApps();
+        List<TriggerReport> triggerReports = new ArrayList<>();
+        for(App app : apps){
+            app.getAppTriggers().forEach((appTrigger -> {
+                if(appTrigger.getTriggerType().getSettingType().equals(SettingType.LOCATION)){
+                    triggerRortRepository.findByStartDateAndAppTrigger(DateUtils.getStringToDate(startDate), appTrigger)
+                            .ifPresent(triggerReports::add);
+                }
+            }));
+        }
+        triggerReports.sort((report1, report2) -> Integer.compare(report2.getTotalCount(), report1.getTotalCount()));
+        List<ReportResponse.ReportInfo> reportInfos = triggerReports.stream().map(ReportResponse.ReportInfo::new).collect(Collectors.toList());
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, reportInfos);
+
+    }
 }

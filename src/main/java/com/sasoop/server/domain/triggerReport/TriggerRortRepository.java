@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface TriggerRortRepository extends JpaRepository<TriggerReport, Long> {
     Optional<TriggerReport> findByStartDateAndEndDateAndAppTrigger(Date startDate, Date endDate, AppTrigger appTrigger);
+    Optional<TriggerReport> findByStartDateAndAppTrigger(Date startDate, AppTrigger appTrigger);
 }

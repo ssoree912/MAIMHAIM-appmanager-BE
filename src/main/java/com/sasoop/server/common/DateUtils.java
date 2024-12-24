@@ -1,8 +1,10 @@
 package com.sasoop.server.common;
 
 import com.sasoop.server.domain.triggerRaw.TriggerRaw;
-import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -40,5 +42,19 @@ public class DateUtils {
         DayOfWeek dayOfWeek = createDate.getDayOfWeek();
         int dayIndex = dayOfWeek.getValue() % 7 ; // 일요일을 0로 설정
         return dayIndex;
+    }
+    public static Date getStringToDate(String dateString)  {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = formatter.parse(dateString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Convert LocalDate of Sunday to Date
+        return Date.from(getStartOfWeek(localDate).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
     }
 }
