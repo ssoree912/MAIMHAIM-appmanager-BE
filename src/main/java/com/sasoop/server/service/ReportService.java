@@ -7,6 +7,7 @@ import com.sasoop.server.controller.dto.response.ReportResponse;
 import com.sasoop.server.domain.LocationTrigger.LocationTriggerReport;
 import com.sasoop.server.domain.LocationTrigger.LocationTriggerReportRepository;
 import com.sasoop.server.domain.app.App;
+import com.sasoop.server.domain.app.AppRepository;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.locations.Locations;
 import com.sasoop.server.domain.locations.LocationsRepository;
@@ -26,9 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +39,7 @@ public class ReportService {
     private final LocationsRepository locationsRepository;
     private final LocationTriggerReportRepository locationTriggerReportRepository;
     private final TriggerRortRepository triggerRortRepository;
+    private final AppRepository appRepository;
 
     @Transactional
     public void saveTriggerRaw(AppTrigger appTrigger, String location, String address, double latitude, double longitude){
@@ -81,5 +81,22 @@ public class ReportService {
         List<ReportResponse.ReportInfo> reportInfos = triggerReports.stream().map(ReportResponse.ReportInfo::new).collect(Collectors.toList());
         return APIResponse.of(SuccessCode.SELECT_SUCCESS, reportInfos);
 
+    }
+
+    public APIResponse getAppReports(Member getMember, String startDate, Long appId) {
+        App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
+        AppTrigger appTrigger = app.getAppTriggers().stream().filter(trigger -> trigger.getTriggerType().getSettingType().equals(SettingType.LOCATION)).findFirst().orElseThrow(() -> new IllegalArgumentException("Trigger not found"));
+
+        List<LocationTriggerReport> locationTriggerReport = locationTriggerReportRepository.findByStartDateAndAppTriggerOrderByCountDesc(DateUtils.getStringToDate(startDate), appTrigger).orElse(Collections.emptyList());
+        List<ReportResponse.LocationInfo> locationInfos = locationTriggerReport.stream().map(ReportResponse.LocationInfo::new).collect(Collectors.toList());
+        TriggerReport triggerReport = triggerRortRepository.findByStartDateAndAppTrigger(DateUtils.getStringToDate(startDate), appTrigger).orElse(null);
+        if(triggerReport == null){
+            ReportResponse.ReportInfo reportInfo = new ReportResponse.ReportInfo(app.getName(), app.getAppId());
+            ReportResponse.AppReportInfo appReportInfo = new ReportResponse.AppReportInfo(reportInfo, Collections.emptyList());
+            return APIResponse.of(SuccessCode.SELECT_SUCCESS, appReportInfo);
+        }
+        ReportResponse.ReportInfo reportInfo = new ReportResponse.ReportInfo(triggerReport);
+        ReportResponse.AppReportInfo appReportInfo = new ReportResponse.AppReportInfo(reportInfo, locationInfos);
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, appReportInfo);
     }
 }
