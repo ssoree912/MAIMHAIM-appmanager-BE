@@ -1,8 +1,7 @@
 insert into category (category_id,create_date, modified_date, name)
-values (1, now(),now(),'식음료') ,  (2, now(),now(),'교통'), (3, now(),now(),'금융'), (4, now(),now(),'증권 및 투자'), (5, now(),now(),'교육'),(6, now(),now(),'쇼핑'),(7, now(),now(),'편의점');
+values (1, now(),now(),'Food & Berverage') ,  (2, now(),now(),'Productivity & Communication'), (3, now(),now(),'Finance'), (4, now(),now(),'News & Media'), (5, now(),now(),'Technology & Events'),(6, now(),now(),'E-Commerce & Retail');
 insert into managed_app (managed_app_id,category_id, image_url, main_url, name, package_name,create_date,modified_date,ssid)
 values (2,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/holllys.png', 'url', '할리스 커피', 'com.kr.hollyscoffee',now(),now(),'hollys'),
-       (3,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/starbucks.png', 'url', '스타벅스', 'com.starbucks.co',now(),now(),'starbucks'),
        (4,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/twosome.png', 'url', '투썸플레이스', 'com.cj.twosome',now(),now(),'twosome'),
        (5,2, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/tmoney.png', 'url', '모바일 티머니', 'com.lgt.tmoney',now(),now(),'t'),
        (6,2, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/tmoneygo.png', 'url', '티머니 GO', 'kr.co.tmoney.tiay',now(),now(),'tmoney'),
@@ -14,12 +13,21 @@ values (2,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/
        (13,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/hanstock.png', 'url', '한국투자증권', 'com.truefriend.neosmartarenewal',now(),now(),'neosmartarenewal'),
        (14,5, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/kcard.png', 'url', 'K-CARD', 'kr.co.symtra.kmuid',now(),now(),'kcard'),
        (15,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/olive.webp', 'url', '올리브영', 'com.oliveyoung',now(),now(),'oliveyoung'),
-       (16,7, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/gs.webp', 'url', '우리동네GS', 'com.gsr.gs25',now(),now(),'gs25'),
-       (17,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/costco.png', 'url', 'costco', 'com.costco.dmc.store',now(),now(),'costco'),
-       (18,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/fidelity.png', 'url', 'fidelity', 'com.fidelity.wi.activity',now(),now(),'fidelity'),
-       (19,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/amazon.png', 'url', 'amazon', 'com.amazon.mShop.android.shopping',now(),now(),'amazon'),
-       (20,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/target.png', 'url', 'target', 'com.lasoo.android.target',now(),now(),'target'),
-       (21,5, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/ces.webp', 'url', 'CES 2025', 'com.cta.cestech',now(),now(),'ces');
+       (16,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/gs.webp', 'url', '우리동네GS', 'com.gsr.gs25',now(),now(),'gs25'),
+
+       (3,1, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/starbucks.png', 'url', 'Starbucks', 'com.starbucks.mobilecard',now(),now(),'starbucks'),
+       (17,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/costco.png', 'url', 'Costco', 'com.costco.dmc.store',now(),now(),'costco'),
+       (18,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/fidelity.png', 'url', 'Fidelity', 'com.fidelity.wi.activity',now(),now(),'fidelity'),
+       (19,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/amazon.png', 'url', 'Amazon Shopping', 'com.amazon.mShop.android.shopping',now(),now(),'amazon'),
+       (20,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/IKEA.png', 'url', 'IKEA', 'com.ingka.ikea.app',now(),now(),'ikea'),
+       (21,5, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/ces.webp', 'url', 'CES 2025', 'com.cta.cestech',now(),now(),'ces'),
+       (22,6, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/walmart.webp', 'url', 'Walmart', 'com.walmart.android',now(),now(),'walmart'),
+       (23,3, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/Robinhood+Wallet.jpg', 'url', 'Wallet', 'com.robinhood.gateway',now(),now(),'wallet'),
+       (24,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/BBC.png', 'url', 'BBC', 'bbc.mobile.news.ww',now(),now(),'BBC'),
+       (25,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/CNN.png', 'url', 'CNN', 'com.cnn.mobile.android.phone',now(),now(),'CNN'),
+       (26,4, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/Google+News.png', 'url', 'Google News', 'com.google.android.apps.magazines',now(),now(),'News'),
+       (27,2, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/Google+Meet.png', 'url', 'Meet', 'com.google.android.apps.tachyon',now(),now(),'Meet'),
+       (28,2, 'https://appmanager-asset.s3.ap-northeast-2.amazonaws.com/appimage/Zoom.png', 'url', 'Zoom', 'us.zoom.videomeetings',now(),now(),'zoom');
 insert into detail_function (detail_function_id,category_id, create_date, modified_date, name)
 values (1,1,now(),now(),'앱 실행') , (2,2,now(),now(),'앱 실행') , (3,3,now(),now(),'앱 실행') , (4,5,now(),now(),'앱 실행') , (5,5,now(),now(),'앱 실행'),(6,6,now(),now(),'앱 실행'),(7,7,now(),now(),'앱 실행') ;
 
