@@ -14,20 +14,23 @@ public class ReportResponse {
     @Setter
     public static class ReportInfo {
         private String appName;
+        private String image;
         private int count;
         private Long appId;
         private List<Long> weeklyReport;
 
-        public ReportInfo(String appName, Long appId) {
+        public ReportInfo(String appName, Long appId, String imageUrl) {
             this.appName = appName;
             this.count = 0;
             this.appId = appId;
+            this.image = imageUrl;
 
         }
 
 
         public ReportInfo(TriggerReport triggerReport) {
             this.appName = triggerReport.getAppTrigger().getApp().getName();
+            this.image = triggerReport.getAppTrigger().getApp().getManagedApp().getImageUrl();
             this.count = triggerReport.getTotalCount();
             this.appId = triggerReport.getAppTrigger().getApp().getAppId();
             this.weeklyReport = triggerReport.getWeeklyReport();

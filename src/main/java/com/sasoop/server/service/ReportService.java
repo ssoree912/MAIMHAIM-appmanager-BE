@@ -91,7 +91,7 @@ public class ReportService {
         List<ReportResponse.LocationInfo> locationInfos = locationTriggerReport.stream().map(ReportResponse.LocationInfo::new).collect(Collectors.toList());
         TriggerReport triggerReport = triggerRortRepository.findByStartDateAndAppTrigger(DateUtils.getStringToDate(startDate), appTrigger).orElse(null);
         if(triggerReport == null){
-            ReportResponse.ReportInfo reportInfo = new ReportResponse.ReportInfo(app.getName(), app.getAppId());
+            ReportResponse.ReportInfo reportInfo = new ReportResponse.ReportInfo(app.getName(), app.getAppId(), app.getManagedApp().getImageUrl());
             ReportResponse.AppReportInfo appReportInfo = new ReportResponse.AppReportInfo(reportInfo, Collections.emptyList());
             return APIResponse.of(SuccessCode.SELECT_SUCCESS, appReportInfo);
         }
