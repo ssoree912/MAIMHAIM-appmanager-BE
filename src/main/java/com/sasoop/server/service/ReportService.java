@@ -21,13 +21,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,5 +99,22 @@ public class ReportService {
         ReportResponse.ReportInfo reportInfo = new ReportResponse.ReportInfo(triggerReport);
         ReportResponse.AppReportInfo appReportInfo = new ReportResponse.AppReportInfo(reportInfo, locationInfos);
         return APIResponse.of(SuccessCode.SELECT_SUCCESS, appReportInfo);
+    }
+
+    public APIResponse getMap(Member getMember, String startDate) {
+        List<Locations> locations = locationsRepository.findAll();
+        List<LocationTriggerReport> locationTriggerReports = new ArrayList<>();
+        locations.forEach(location -> locationTriggerReportRepository.findTopByLocationsAndStartDate(location, DateUtils.getStringToDate(startDate)).ifPresent(locationTriggerReports::add));
+        List<ReportResponse.Map> maps = locationTriggerReports.stream().map(ReportResponse.Map::new).collect(Collectors.toList());
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, maps);
+
+    }
+
+    public APIResponse getMapByApp(Member getMember, String startDate, Long appId) {
+        App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
+        AppTrigger appTrigger = app.getAppTriggers().stream().filter(trigger -> trigger.getTriggerType().getSettingType().equals(SettingType.LOCATION)).findFirst().orElseThrow(() -> new IllegalArgumentException("Trigger not found"));
+        List<LocationTriggerReport> locationTriggerReports = locationTriggerReportRepository.findByStartDateAndAppTriggerOrderByCountDesc(DateUtils.getStringToDate(startDate), appTrigger).orElse(Collections.emptyList());
+        List<ReportResponse.Coordinate> coordinates = locationTriggerReports.stream().map(locationTriggerReport -> new ReportResponse.Coordinate(locationTriggerReport.getLocations())).collect(Collectors.toList());
+        return APIResponse.of(SuccessCode.SELECT_SUCCESS, new ReportResponse.MapByApp(app,coordinates));
     }
 }

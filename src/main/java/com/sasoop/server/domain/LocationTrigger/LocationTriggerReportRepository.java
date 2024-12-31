@@ -12,4 +12,6 @@ public interface LocationTriggerReportRepository extends JpaRepository<LocationT
     Optional<LocationTriggerReport> findByStartDateAndEndDateAndLocationsAndAppTrigger(Date startDate, Date endDate, Locations locations, AppTrigger appTrigger);
     Optional<List<LocationTriggerReport>> findByStartDateAndAppTriggerOrderByCountDesc(Date startDate, AppTrigger appTrigger);
 
+
+    Optional<LocationTriggerReport> findTopByLocationsAndStartDate(Locations locations, Date startDate);
 }
