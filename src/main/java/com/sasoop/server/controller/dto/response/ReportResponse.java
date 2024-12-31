@@ -4,12 +4,10 @@ import com.sasoop.server.domain.LocationTrigger.LocationTriggerReport;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.locations.Locations;
 import com.sasoop.server.domain.triggerReport.TriggerReport;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReportResponse {
     @Getter
@@ -77,22 +75,22 @@ public class ReportResponse {
     @Getter
     @Setter
     public static class Map{
-        private AppInfo app;
+        private AppData app;
         private Coordinate coordinate;
 
         public Map(LocationTriggerReport locationTriggerReport) {
-            this.app = new AppInfo(locationTriggerReport.getAppTrigger().getApp());
+            this.app = new AppData(locationTriggerReport.getAppTrigger().getApp());
             this.coordinate = new Coordinate(locationTriggerReport.getLocations());
         }
     }
     @Getter
     @Setter
-    public static class AppInfo{
+    public static class AppData {
         private Long appId;
         private String appName;
         private String image;
 
-        public AppInfo(App app) {
+        public AppData(App app) {
             this.appId = app.getAppId();
             this.appName = app.getName();
             this.image = app.getManagedApp().getImageUrl();
@@ -101,12 +99,23 @@ public class ReportResponse {
     @Getter
     @Setter
     public static class MapByApp{
-        private AppInfo app;
+        private AppData app;
         private List<Coordinate> coordinates;
 
         public MapByApp(App app, List<Coordinate> coordinates) {
-            this.app = new AppInfo(app);
+            this.app = new AppData(app);
             this.coordinates = coordinates;
+        }
+    }
+    @Getter
+    @Setter
+    public static class MapReport{
+        List<Map> maps;
+        List<ReportInfo> appList;
+
+        public MapReport(List<Map> maps, List<ReportInfo> reports) {
+            this.maps = maps;
+            this.appList = reports;
         }
     }
 }

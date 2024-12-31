@@ -2,6 +2,7 @@ package com.sasoop.server.controller;
 
 import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
+import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.response.ReportResponse;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.service.MemberService;
@@ -42,8 +43,8 @@ public class ReportController {
     @GetMapping("/{memberId}/{startDate}")
     public ResponseEntity<APIResponse<List<ReportResponse.ReportInfo>>> getReports(@PathVariable("memberId") Long memberId, @PathVariable("startDate") String startDate) {
         Member getMember = memberService.findByMemberId(memberId);
-        APIResponse response = reportService.getReports(getMember, startDate);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        List<ReportResponse.ReportInfo> reportInfos = reportService.getReports(getMember, startDate);
+        return new ResponseEntity<>(APIResponse.of(SuccessCode.SELECT_SUCCESS,reportInfos), HttpStatus.OK);
     }
 
     @Operation(summary = "앱 별 리포트 조회")
@@ -68,9 +69,11 @@ public class ReportController {
             @ApiResponse(responseCode = "500", description = "외부 API 요청 실패, 정상적 수행을 할 수 없을 때,",content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
     })
     @GetMapping("/map/{memberId}/{startDate}")
-    public ResponseEntity<APIResponse<List<ReportResponse.Map>>> getMap(@PathVariable("memberId") Long memberId, @PathVariable("startDate") String startDate) {
+    public ResponseEntity<APIResponse<List<ReportResponse.MapReport>>> getMap(@PathVariable("memberId") Long memberId, @PathVariable("startDate") String startDate) {
         Member getMember = memberService.findByMemberId(memberId);
-        APIResponse response = reportService.getMap(getMember, startDate);
+        List<ReportResponse.Map> maps = reportService.getMap(getMember, startDate);
+        List<ReportResponse.ReportInfo> reports = reportService.getReports(getMember, startDate);
+        APIResponse response = APIResponse.of(SuccessCode.SELECT_SUCCESS, new ReportResponse.MapReport(maps, reports));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @Operation(summary = "앱별 이용 지도 조회")
@@ -86,5 +89,7 @@ public class ReportController {
         APIResponse response = reportService.getMapByApp(getMember, startDate, appId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 
 }

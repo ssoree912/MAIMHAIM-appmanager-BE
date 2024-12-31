@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ReportService {
     private static final Logger log = LoggerFactory.getLogger(ReportService.class);
     private final TriggerRawRepository triggerRawRepository;
@@ -67,7 +66,7 @@ public class ReportService {
     }
 
 
-    public APIResponse<List<ReportResponse.ReportInfo>> getReports(Member getMember, String startDate) {
+    public List<ReportResponse.ReportInfo> getReports(Member getMember, String startDate) {
         List<App> apps = getMember.getApps();
         List<TriggerReport> triggerReports = new ArrayList<>();
         for(App app : apps){
@@ -80,14 +79,13 @@ public class ReportService {
         }
         triggerReports.sort((report1, report2) -> Integer.compare(report2.getTotalCount(), report1.getTotalCount()));
         List<ReportResponse.ReportInfo> reportInfos = triggerReports.stream().map(ReportResponse.ReportInfo::new).collect(Collectors.toList());
-        return APIResponse.of(SuccessCode.SELECT_SUCCESS, reportInfos);
+        return reportInfos;
 
     }
 
     public APIResponse getAppReports(Member getMember, String startDate, Long appId) {
         App app = appRepository.findById(appId).orElseThrow(() -> new IllegalArgumentException("App not found"));
         AppTrigger appTrigger = app.getAppTriggers().stream().filter(trigger -> trigger.getTriggerType().getSettingType().equals(SettingType.LOCATION)).findFirst().orElseThrow(() -> new IllegalArgumentException("Trigger not found"));
-
         List<LocationTriggerReport> locationTriggerReport = locationTriggerReportRepository.findByStartDateAndAppTriggerOrderByCountDesc(DateUtils.getStringToDate(startDate), appTrigger).orElse(Collections.emptyList());
         List<ReportResponse.LocationInfo> locationInfos = locationTriggerReport.stream().map(ReportResponse.LocationInfo::new).collect(Collectors.toList());
         TriggerReport triggerReport = triggerRortRepository.findByStartDateAndAppTrigger(DateUtils.getStringToDate(startDate), appTrigger).orElse(null);
@@ -101,13 +99,32 @@ public class ReportService {
         return APIResponse.of(SuccessCode.SELECT_SUCCESS, appReportInfo);
     }
 
-    public APIResponse getMap(Member getMember, String startDate) {
-        List<Locations> locations = locationsRepository.findAll();
-        List<LocationTriggerReport> locationTriggerReports = new ArrayList<>();
-        locations.forEach(location -> locationTriggerReportRepository.findTopByLocationsAndStartDate(location, DateUtils.getStringToDate(startDate)).ifPresent(locationTriggerReports::add));
-        List<ReportResponse.Map> maps = locationTriggerReports.stream().map(ReportResponse.Map::new).collect(Collectors.toList());
-        return APIResponse.of(SuccessCode.SELECT_SUCCESS, maps);
+    public List<ReportResponse.Map> getMap(Member getMember, String startDate) {
+        List<App> apps = getMember.getApps();
+        List<Locations> locationList = locationsRepository.findAll();
+        List<LocationTriggerReport> maxCountLocationTriggerReports = new ArrayList<>();
 
+        for (Locations location : locationList) {
+            final LocationTriggerReport[] maxCountReport = {null};
+            for (App app : apps) {
+                for (AppTrigger appTrigger : app.getAppTriggers()) {
+                    if (appTrigger.getTriggerType().getSettingType().equals(SettingType.LOCATION)) {
+                        locationTriggerReportRepository.findByLocationsAndAppTriggerAndStartDate(location, appTrigger, DateUtils.getStringToDate(startDate))
+                                .ifPresent(report -> {
+                                    if (maxCountReport[0] == null || report.getCount() > maxCountReport[0].getCount()) {
+                                        maxCountReport[0] = report;
+                                    }
+                                });
+                    }
+                }
+            }
+            if (maxCountReport[0] != null) {
+                maxCountLocationTriggerReports.add(maxCountReport[0]);
+            }
+        }
+
+        List<ReportResponse.Map> maps = maxCountLocationTriggerReports.stream().map(ReportResponse.Map::new).collect(Collectors.toList());
+        return maps;
     }
 
     public APIResponse getMapByApp(Member getMember, String startDate, Long appId) {
@@ -117,4 +134,5 @@ public class ReportService {
         List<ReportResponse.Coordinate> coordinates = locationTriggerReports.stream().map(locationTriggerReport -> new ReportResponse.Coordinate(locationTriggerReport.getLocations())).collect(Collectors.toList());
         return APIResponse.of(SuccessCode.SELECT_SUCCESS, new ReportResponse.MapByApp(app,coordinates));
     }
+
 }
