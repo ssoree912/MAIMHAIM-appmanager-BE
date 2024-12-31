@@ -1,0 +1,19 @@
+{
+  "location": "Lamb Blv",
+  "address": "1400 S Lamb Blvd, Las Vegas, NV 89104 USA",
+  "latitude": 36.15851028369886,
+  "longitude":  -115.08027780157217
+},
+{
+  "location": "Maryland Pkwy",
+  "address": "4705 S Maryland Pkwy, Las Vegas, NV 89119 USA",
+  "latitude": 36.10465623872247,
+  "longitude":  -115.13801876780296
+},
+
+{
+  "location": "Blvd S",
+  "address": "3200 Las Vegas Blvd S, Las Vegas, NV 89109 USA",
+  "latitude": 36.13134999556686,
+  "longitude": -115.1718556914611
+}

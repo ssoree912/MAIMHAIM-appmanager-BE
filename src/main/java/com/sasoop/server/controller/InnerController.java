@@ -9,10 +9,7 @@ import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.member.Member;
 import com.sasoop.server.domain.triggerType.SettingType;
-import com.sasoop.server.service.AppService;
-import com.sasoop.server.service.MemberService;
-import com.sasoop.server.service.ReportService;
-import com.sasoop.server.service.TriggerService;
+import com.sasoop.server.service.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +31,7 @@ public class InnerController {
     private final AppService appService;
     private final TriggerService triggerService;
     private final ReportService reportService;
-
+    private final LocationService locationService;
 
 //    @Tag(name = "App")
 //    @Operation(summary = "안드로이드 트리거 값 요청시 관련 패키지 조회")
@@ -88,6 +85,12 @@ public class InnerController {
         Member getMember = memberService.findByMemberId(triggerRequest.getMemberId());
         AppTrigger appTrigger=triggerService.addCount(getMember, packageName, triggerRequest);
         if(triggerRequest.getType().equals(SettingType.LOCATION)) reportService.saveTriggerRaw(appTrigger, triggerRequest.getRaw().getLocation(), triggerRequest.getRaw().getAddress(), triggerRequest.getRaw().getLatitude(), triggerRequest.getRaw().getLongitude());
+    }
+
+    @Tag(name = "location")
+    @PostMapping("location")
+    public void addLocation(@RequestBody TriggerRequest.Raw raw){
+        locationService.saveLocation( raw.getLocation(), raw.getAddress(), raw.getLatitude(), raw.getLongitude());
     }
 
 }
