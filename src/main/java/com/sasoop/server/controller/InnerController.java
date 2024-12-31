@@ -1,13 +1,11 @@
 package com.sasoop.server.controller;
 
-import com.sasoop.server.common.dto.APIResponse;
 import com.sasoop.server.common.dto.ErrorResponse;
-import com.sasoop.server.common.dto.enums.SuccessCode;
 import com.sasoop.server.controller.dto.request.TriggerRequest;
-import com.sasoop.server.controller.dto.response.InnerSettingResponse;
 import com.sasoop.server.domain.app.App;
 import com.sasoop.server.domain.appTrigger.AppTrigger;
 import com.sasoop.server.domain.member.Member;
+import com.sasoop.server.domain.triggerRaw.TriggerRaw;
 import com.sasoop.server.domain.triggerType.SettingType;
 import com.sasoop.server.service.*;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -19,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -84,7 +81,10 @@ public class InnerController {
     public void addCount(@PathVariable String packageName, @RequestBody TriggerRequest.UpdateTriggerCount triggerRequest){
         Member getMember = memberService.findByMemberId(triggerRequest.getMemberId());
         AppTrigger appTrigger=triggerService.addCount(getMember, packageName, triggerRequest);
-        if(triggerRequest.getType().equals(SettingType.LOCATION)) reportService.saveTriggerRaw(appTrigger, triggerRequest.getRaw().getLocation(), triggerRequest.getRaw().getAddress(), triggerRequest.getRaw().getLatitude(), triggerRequest.getRaw().getLongitude());
+        if(triggerRequest.getType().equals(SettingType.LOCATION)){
+            TriggerRaw triggerRaw = reportService.saveTriggerRaw(appTrigger, triggerRequest.getRaw().getLocation(), triggerRequest.getRaw().getAddress(), triggerRequest.getRaw().getLatitude(), triggerRequest.getRaw().getLongitude());
+            locationService.saveTriggerRaw(triggerRaw,appTrigger);
+        };
     }
 
     @Tag(name = "location")

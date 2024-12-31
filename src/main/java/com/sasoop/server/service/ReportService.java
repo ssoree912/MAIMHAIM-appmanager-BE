@@ -42,7 +42,7 @@ public class ReportService {
     private final AppRepository appRepository;
 
     @Transactional
-    public void saveTriggerRaw(AppTrigger appTrigger, String location, String address, double latitude, double longitude){
+    public TriggerRaw saveTriggerRaw(AppTrigger appTrigger, String location, String address, double latitude, double longitude){
         TriggerRaw triggerRaw = TriggerRaw.toEntity(location, address, latitude, longitude, appTrigger);
         TriggerRaw savedRaw = triggerRawRepository.save(triggerRaw);
         Locations locations = locationsRepository.findByLatitudeAndLongitude(latitude, longitude)
@@ -62,7 +62,7 @@ public class ReportService {
         log.info(triggerReport.getWeeklyReport().toString());
         triggerReport.addWeeklyReport(dayIndex);
         triggerRortRepository.save(triggerReport);
-
+        return triggerRaw;
     }
 
 
