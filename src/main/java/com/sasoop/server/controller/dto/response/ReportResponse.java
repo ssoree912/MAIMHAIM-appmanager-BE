@@ -111,11 +111,11 @@ public class ReportResponse {
     @Setter
     public static class MapReport{
         List<Map> maps;
-        List<ReportInfo> appList;
+        List<ReportInfo> reports;
 
         public MapReport(List<Map> maps, List<ReportInfo> reports) {
             this.maps = maps;
-            this.appList = reports;
+            this.reports = reports;
         }
     }
 }
